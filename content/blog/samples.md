@@ -2,11 +2,11 @@
 title = "Formatting Samples"
 description = "Formatting samples for reference"
 date = 2021-05-02T18:18:18+00:00
+draft = true
 
 [extra]
 author = "Public"
 
-draft = true
 +++
 
 **Note:**
