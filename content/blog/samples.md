@@ -6,7 +6,6 @@ draft = true
 
 [extra]
 author = "Public"
-
 +++
 
 **Note:**
