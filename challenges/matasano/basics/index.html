@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+<title>Matasano Cryptography Challenges: Basics | Zane&#x27;s Notes</title>
+
+
+
+<meta property="og:title" content="Matasano Cryptography Challenges: Basics">
+
+
+
+<meta name="author" content="Zane Fry">
+
+
+<meta property="og:locale" content="en_US">
+
+
+<meta name="description" content="Notes on infosec">
+<meta property="og:description" content="Notes on infosec">
+
+
+
+<link rel="canonical" href="https://zanefry.github.io/challenges/matasano/basics/">
+<meta property="og:url" content="https://zanefry.github.io/challenges/matasano/basics/">
+
+
+
+<meta property="og:site_name" content="Zane&#x27;s Notes" />
+
+
+
+  <meta property="og:image" content="https://zanefry.github.io/tale.png">
+  
+  
+
+
+
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2022-11-14T19:54:00-06:00">
+
+
+
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image"">
+  <meta property="twitter:image" content="https://zanefry.github.io/tale.png">
+
+
+
+  <meta property="twitter:title" content="Matasano Cryptography Challenges: Basics">
+
+
+
+
+
+  
+
+  
+
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+<script type="application/ld+json">
+{
+  "author": {
+    "@type":"Person",
+	  "name":"Zane Fry",
+  },
+  "description": "Notes on infosec",
+  "url": "https://zanefry.github.io/challenges/matasano/basics/",
+  "@context":"https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Matasano Cryptography Challenges: Basics"
+  
+    
+    
+      "datePublished":"2022-11-14T19:54:00-06:00",
+    
+    "mainEntityOfPage":{
+      "@type":"WebPage",
+      "@id":"https://zanefry.github.io/challenges/matasano/basics/"
+    },
+  
+}
+</script>
+
+  <link rel="stylesheet" href="https://zanefry.github.io/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://zanefry.github.io/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://zanefry.github.io/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://zanefry.github.io/assets/apple-touch-icon.png">
+
+  
+    <link type="application/atom+xml" rel="alternate" href="https://zanefry.github.io/atom.xml" title="Zane&#x27;s Notes" />
+  
+
+  
+
+  
+  
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+	integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+	integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+	integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+	onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+<body>
+  
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="https://zanefry.github.io">
+        <h2 class="nav-title">Zane&#x27;s Notes</h2>
+      </a>
+      <ul>
+        
+          
+            <li><a href="https://zanefry.github.io/blog">Blog</a></li>
+          
+            <li><a href="https://zanefry.github.io/challenges">Challenges</a></li>
+          
+            <li><a href="https://zanefry.github.io/tags">Tags</a></li>
+          
+            <li><a href="https://zanefry.github.io/about">About</a></li>
+          
+        
+      </ul>
+    </div>
+  </nav>
+  
+
+  <main>
+    
+  <div class="post">
+  	<div class="post-info">
+  		<span>Written by</span> Zane Fry<br>
+  		
+  		<span>on&nbsp;</span><time datetime="2022-11-14T19:54:00-06:00">November 14, 2022</time>
+  	</div>
+  	<h1 class="post-title">Matasano Cryptography Challenges: Basics</h1>
+  	<div class="post-line"></div>
+  	<p><strong>What Should I Expect?</strong></p>
+<blockquote>
+<p>These are based off real-world vulnerabilities. None of them are &quot;puzzles&quot;. They're not designed to trip you up. Some of the attacks are clever, though, and if you're not familiar with crypto cleverness... well, you should like solving puzzles.</p>
+</blockquote>
+<span id="continue-reading"></span>
+<p>This post contains full solutions to the problems in set 1. If these challenges are applicable to you, I encourage you to attempt them blind.
+The progression and hints in these challenges are done very thoughtfully, so don't spoil the solutions if you want the full experience.</p>
+<p>Full credit and my appreciation for the development of these problems goes to Matasano Security, the <a href="https://cryptoservices.github.io/">Cryptography Services Team</a>
+at <a href="https://www.nccgroup.trust/us/">NCC Group</a>, and any other contributers.</p>
+<p>The challenges are hosted at <a href="https://cryptopals.com/sets/1">https://cryptopals.com/sets/1</a> and my solutions are on <a href="https://github.com/zanefry/cryptopals/">github</a>.</p>
+<hr />
+<h1 id="convert-hex-to-base64"><a class="zola-anchor" href="#convert-hex-to-base64" aria-label="Anchor link for: convert-hex-to-base64">🔗</a>Convert hex to base64</h1>
+<p>The string:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d
+</span></code></pre>
+<p>Should produce:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t
+</span></code></pre>
+<p>So go ahead and make that happen. You'll need to use this code for the rest of the exercises.</p>
+<p><strong>Cryptopals Rule</strong></p>
+<blockquote>
+<p>Always operate on raw bytes, never on encoded strings. Only use hex and base64 for pretty-printing.</p>
+</blockquote>
+<h2 id="solution"><a class="zola-anchor" href="#solution" aria-label="Anchor link for: solution">🔗</a>Solution</h2>
+<p>Python takes care of this for us with the standard library, so I'll give a brief explanation here
+of hex and base64, and how the conversion is done.</p>
+<p>Hex (hexadecimal) and base64 are both <em>encodings</em>, or ways of representing binary data. They're simply formats that encode data using a set of letters and numbers.
+Hex uses 16 symbols: 0123456789abcdef. Base64 uses 64 symbols: A-Z followed by a-z, followed by 0-9, then +, /, and = (which has a special role.)</p>
+<p>One <em>bit</em>, which can be either 0 or 1, can encode two states. One hex symbol encodes 16 states, so one hex symbol holds four bits worth of information.</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>decimal | binary | hex
+</span><span>--------|--------|----
+</span><span>     0  |  0000  | 0
+</span><span>     1  |  0001  | 1
+</span><span>     2  |  0010  | 2
+</span><span>     3  |  0011  | 3
+</span><span>     4  |  0100  | 4
+</span><span>     5  |  0101  | 5
+</span><span>     6  |  0110  | 6
+</span><span>     7  |  0111  | 7
+</span><span>     8  |  1000  | 8
+</span><span>     9  |  1001  | 9
+</span><span>     10 |  1010  | a
+</span><span>     11 |  1011  | b
+</span><span>     12 |  1100  | c
+</span><span>     13 |  1101  | d
+</span><span>     14 |  1110  | e
+</span><span>     15 |  1111  | f
+</span></code></pre>
+<p>A <em>byte</em> (eight bits) can be represented by two hex symbols. Base64, on the other hand,
+doesn't work out quite as cleanly because one symbol holds six bits of information. So four base64
+symbols encode three bytes (4 * 6 = 3 * 8).</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>          1010 1110 1101 0010
+</span><span>   hex -&gt; a    e    d    2
+</span><span>
+</span><span>          101011 101101 0010
+</span><span>base64 -&gt; r      t      ?
+</span></code></pre>
+<p>What about a case like this, where the four bits left over aren't enough for a base64 symbol? That's where = comes in.
+The policy is to pad the remainder to a full six bits with 0s, then to add = until the length of the whole
+thing is a multiple of four symbols. So this example becomes:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>          101011 101101 001000
+</span><span>base64 -&gt; r      t      I      =
+</span></code></pre>
+<p>In the github repo I have C code that does all this manually, but I've decided not to go over the C solutions
+because it'd be too tedious. In python we just <code>import base64</code> and use the standard function <code>bytes.fromhex()</code> to
+get a bytes object from the hex string, then a base64 string from the bytes object.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">import </span><span>base64
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">hex_to_b64</span><span>(</span><span style="font-style:italic;color:#fc9354;">hex</span><span>: </span><span style="color:#fbe3bf;">str</span><span>) -&gt; </span><span style="color:#fbe3bf;">str</span><span>:
+</span><span>    raw </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(</span><span style="color:#6699cc;">hex</span><span>)
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>base64.</span><span style="color:#e9fdac;">b64encode</span><span>(raw).</span><span style="color:#e9fdac;">decode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ascii</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>hex_input: </span><span style="color:#fbe3bf;">str
+</span><span>correct_b64: </span><span style="color:#fbe3bf;">str
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/1.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    hex_input, correct_b64 </span><span style="color:#ff5e5e;">= </span><span>[l.</span><span style="color:#e9fdac;">rstrip</span><span>() </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]
+</span><span>
+</span><span>b64 </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">hex_to_b64</span><span>(hex_input)
+</span><span>
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">correct</span><span style="color:#ffffff;">&#39; </span><span style="color:#ff5e5e;">if </span><span>b64 </span><span style="color:#ff5e5e;">== </span><span>correct_b64 </span><span style="color:#ff5e5e;">else </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">incorrect</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<hr />
+<h1 id="fixed-xor"><a class="zola-anchor" href="#fixed-xor" aria-label="Anchor link for: fixed-xor">🔗</a>Fixed XOR</h1>
+<p>Write a function that takes two equal-length buffers and produces their XOR combination.</p>
+<p>If your function works properly, then when you feed it the string:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>1c0111001f010100061a024b53535009181c
+</span></code></pre>
+<p>... after hex decoding, and when XOR'd against:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>686974207468652062756c6c277320657965
+</span></code></pre>
+<p>... should produce:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>746865206b696420646f6e277420706c6179
+</span></code></pre>
+<h2 id="solution-1"><a class="zola-anchor" href="#solution-1" aria-label="Anchor link for: solution-1">🔗</a>Solution</h2>
+<p>This one also doesn't require much explanation. Note that the <code>bytes</code> object returned from <code>bytes.fromhex()</code> is indexed
+like a list to get individual bytes, and the <code>^</code> symbol is a builtin for the XOR operation. I talk briefly about the meaning
+of XOR in <a href="https://zanefry.github.io/challenges/bookstore/#local-privilege-escalation">this post</a>, just know that it's similar
+to addition and it's the most primitive and ubiquitous operation in many cryptographic algorithms.
+The expression in square brackets following <code>result =</code> is a <em>list comprehension</em> and evaluates to a list,
+which is why it's wrapped in the <code>bytes()</code> constructor.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>h0: </span><span style="color:#fbe3bf;">str
+</span><span>h1: </span><span style="color:#fbe3bf;">str
+</span><span>correct_out: </span><span style="color:#fbe3bf;">str
+</span><span>
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/2.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    h0, h1, correct_out </span><span style="color:#ff5e5e;">= </span><span>[l.</span><span style="color:#e9fdac;">rstrip</span><span>() </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]
+</span><span>
+</span><span>b0 </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(h0)
+</span><span>b1 </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(h1)
+</span><span>
+</span><span>result </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>([x </span><span style="color:#ff5e5e;">^ </span><span>y </span><span style="color:#ff5e5e;">for </span><span>x, y </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">zip</span><span>(b0, b1)])
+</span><span>
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">correct</span><span style="color:#ffffff;">&#39; </span><span style="color:#ff5e5e;">if </span><span>result.</span><span style="color:#e9fdac;">hex</span><span>() </span><span style="color:#ff5e5e;">== </span><span>correct_out </span><span style="color:#ff5e5e;">else </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">incorrect</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<hr />
+<h1 id="single-byte-xor-cipher"><a class="zola-anchor" href="#single-byte-xor-cipher" aria-label="Anchor link for: single-byte-xor-cipher">🔗</a>Single-byte XOR cipher</h1>
+<p>The hex encoded string:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736
+</span></code></pre>
+<p>... has been XOR'd against a single character. Find the key, decrypt the message.</p>
+<p>You can do this by hand. But don't: write code to do it for you.</p>
+<p>How? Devise some method for &quot;scoring&quot; a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.</p>
+<p><strong>Achievement Unlocked</strong></p>
+<blockquote>
+<p>You now have our permission to make &quot;ETAOIN SHRDLU&quot; jokes on Twitter.</p>
+</blockquote>
+<h2 id="solution-2"><a class="zola-anchor" href="#solution-2" aria-label="Anchor link for: solution-2">🔗</a>Solution</h2>
+<p>
+The signifigance of this problem is that the frequency analysis code it's asking us to write will be used to determine when we've been successful in our
+decryption attempts throughout the rest of the challenges. I first did it with the simplest method I could think of: assigning a score to each letter
+based on English frequency and adding the scores ("eeeeeeee" would have a very high score.) That was enough for this task, but I was dissatisfied
+as I knew there must be a relatively simple way to actually compare the observed distribution of letters to an English baseline, a so-called "goodness of fit" test.
+A little searching and I found a statisical test suited to these situations called the \(\chi^2\) test, a name I remembered from highschool statistics class.
+</p>
+<p>How the test itself works isn't too complicated but that's out of scope for this post. We can just use the <code>scipy</code> implementation and get our statistic,
+and with it a fairly strong signal for when data looks like English text.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>english_freqs </span><span style="color:#ff5e5e;">= </span><span>{}
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/english_counts.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    english_counts </span><span style="color:#ff5e5e;">= </span><span>{}
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>pair </span><span style="color:#ff5e5e;">in </span><span>[l.</span><span style="color:#e9fdac;">split</span><span>() </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]:
+</span><span>        letter </span><span style="color:#ff5e5e;">= </span><span>pair[</span><span style="color:#fdb082;">0</span><span>].</span><span style="color:#e9fdac;">lower</span><span>()
+</span><span>        count </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">int</span><span>(pair[</span><span style="color:#fdb082;">1</span><span>])
+</span><span>        english_counts[letter] </span><span style="color:#ff5e5e;">= </span><span>count
+</span><span>
+</span><span>    num_samples </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">sum</span><span>(english_counts.</span><span style="color:#e9fdac;">values</span><span>())
+</span><span>    english_freqs </span><span style="color:#ff5e5e;">= </span><span>{c: n </span><span style="color:#ff5e5e;">/ </span><span>num_samples </span><span style="color:#ff5e5e;">for </span><span>c, n </span><span style="color:#ff5e5e;">in </span><span>english_counts.</span><span style="color:#e9fdac;">items</span><span>()}
+</span></code></pre>
+<p>I found a table of English letter counts and put them in a text file to parse into a python dictionary. Now we can define our
+score function with this baseline data.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">import </span><span>scipy.stats </span><span style="color:#ff5e5e;">as </span><span>stats
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">score</span><span>(</span><span style="font-style:italic;color:#fc9354;">buf</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">float</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">all</span><span>(</span><span style="color:#6699cc;">chr</span><span>(b).</span><span style="color:#e9fdac;">isascii</span><span>() </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span>buf):
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span style="color:#fdb082;">1000
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">all</span><span>(</span><span style="color:#6699cc;">chr</span><span>(b).</span><span style="color:#e9fdac;">isprintable</span><span>() </span><span style="color:#ff5e5e;">or </span><span style="color:#6699cc;">chr</span><span>(b).</span><span style="color:#e9fdac;">isspace</span><span>() </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span>buf):
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span style="color:#fdb082;">1000
+</span><span>
+</span><span>    letters </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#6699cc;">chr</span><span>(b).</span><span style="color:#e9fdac;">lower</span><span>() </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span>buf </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">chr</span><span>(b).</span><span style="color:#e9fdac;">isalpha</span><span>()]
+</span><span>
+</span><span>    counts </span><span style="color:#ff5e5e;">= </span><span>{c: </span><span style="color:#fdb082;">0 </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span>english_freqs}
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span>letters:
+</span><span>        counts[c] </span><span style="color:#ff5e5e;">+= </span><span style="color:#fdb082;">1
+</span><span>
+</span><span>    observed </span><span style="color:#ff5e5e;">= </span><span>[n </span><span style="color:#ff5e5e;">/ </span><span style="color:#6699cc;">len</span><span>(letters) </span><span style="color:#ff5e5e;">for </span><span>n </span><span style="color:#ff5e5e;">in </span><span style="color:#fbe3bf;">list</span><span>(counts.</span><span style="color:#e9fdac;">values</span><span>())]
+</span><span>    expected </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">list</span><span>(english_freqs.</span><span style="color:#e9fdac;">values</span><span>())
+</span><span>
+</span><span>    chi_2 </span><span style="color:#ff5e5e;">= </span><span>stats.</span><span style="color:#e9fdac;">chisquare</span><span>(</span><span style="font-style:italic;color:#fc9354;">f_obs</span><span style="color:#ff5e5e;">=</span><span>observed, </span><span style="font-style:italic;color:#fc9354;">f_exp</span><span style="color:#ff5e5e;">=</span><span>expected).statistic
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>chi_2 </span><span style="color:#ff5e5e;">* </span><span style="color:#6699cc;">len</span><span>(buf) </span><span style="color:#ff5e5e;">/ </span><span style="color:#6699cc;">len</span><span>(letters)
+</span></code></pre>
+<p>Rather than throwing an exception if the input bytes are non-ascii or non-printable, I opted to return
+a high (unlikely) score. The last part in the return statement adds a penalty depending on the ratio of
+letters to non-letters in the data so that e.g. a piece of data with only 50% letters gets double the score.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">from </span><span>freq </span><span style="color:#ff5e5e;">import </span><span>score
+</span><span>
+</span><span>ciphertxt: </span><span style="color:#fbe3bf;">bytes
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/3.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    ciphertxt </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(f.</span><span style="color:#e9fdac;">read</span><span>().</span><span style="color:#e9fdac;">rstrip</span><span>())
+</span><span>
+</span><span>scores </span><span style="color:#ff5e5e;">= </span><span>{}
+</span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">256</span><span>):
+</span><span>    xor </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>([b </span><span style="color:#ff5e5e;">^ </span><span>c </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span>ciphertxt])
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">all</span><span>(</span><span style="color:#fdb082;">32 </span><span style="color:#ff5e5e;">&lt;= </span><span>c </span><span style="color:#ff5e5e;">&lt;= </span><span style="color:#fdb082;">126 </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span>xor):
+</span><span>        decoded </span><span style="color:#ff5e5e;">= </span><span>xor.</span><span style="color:#e9fdac;">decode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ascii</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>        scores[decoded] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">score</span><span>(xor)
+</span><span>
+</span><span style="color:#ff5e5e;">for </span><span>text, score </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">sorted</span><span>(scores.</span><span style="color:#e9fdac;">items</span><span>(), </span><span style="font-style:italic;color:#fc9354;">key</span><span style="color:#ff5e5e;">=</span><span style="font-style:italic;color:#ff5e5e;">lambda </span><span style="font-style:italic;color:#fc9354;">item</span><span>: item[</span><span style="color:#fdb082;">1</span><span>]):
+</span><span>    </span><span style="color:#6699cc;">print</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span>{score}</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">\t</span><span>{text}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<p>Now let's try it out and reveal the message.</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>[python]$ ./1-3.py
+</span><span>1.9044614051728543:     Cooking MC&#39;s like a pound of bacon
+</span><span>3.2710859569258304:     Eiimoha&amp;KE!u&amp;jomc&amp;g&amp;vishb&amp;i`&amp;dgeih
+</span><span>3.335416059016431:      Dhhlni`&#39;JD t&#39;knlb&#39;f&#39;whric&#39;ha&#39;efdhi
+</span><span>4.847651940214619:      Ammikle&quot;OA%q&quot;nkig&quot;c&quot;rmwlf&quot;md&quot;`caml
+</span><span>6.49319820743893:       Maaeg`i.CM)}.bgek.o.~a{`j.ah.loma`
+</span></code></pre>
+<hr />
+<h1 id="detect-single-character-xor"><a class="zola-anchor" href="#detect-single-character-xor" aria-label="Anchor link for: detect-single-character-xor">🔗</a>Detect single-character XOR</h1>
+<p>One of the 60-character strings in <a href="https://cryptopals.com/static/challenge-data/4.txt">this file</a> has been encrypted by single-character XOR.</p>
+<p>Find it.</p>
+<p>(Your code from #3 should help.)</p>
+<h2 id="solution-3"><a class="zola-anchor" href="#solution-3" aria-label="Anchor link for: solution-3">🔗</a>Solution</h2>
+<p>Is the score function good enough to find the one English text out of 83456 possibilities?</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">from </span><span>freq </span><span style="color:#ff5e5e;">import </span><span>score
+</span><span>
+</span><span>lines: </span><span style="color:#fbe3bf;">list
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/4.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    lines </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(l.</span><span style="color:#e9fdac;">rstrip</span><span>()) </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]
+</span><span>
+</span><span>all_scores </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>raw </span><span style="color:#ff5e5e;">in </span><span>lines:
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">256</span><span>):
+</span><span>        xor </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>([b </span><span style="color:#ff5e5e;">^ </span><span>c </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span>raw])
+</span><span>        all_scores.</span><span style="color:#e9fdac;">append</span><span>((xor, </span><span style="color:#e9fdac;">score</span><span>(xor)))
+</span><span>
+</span><span>top_sorted </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">sorted</span><span>(all_scores, </span><span style="font-style:italic;color:#fc9354;">key</span><span style="color:#ff5e5e;">=</span><span style="font-style:italic;color:#ff5e5e;">lambda </span><span style="font-style:italic;color:#fc9354;">pair</span><span>: pair[</span><span style="color:#fdb082;">1</span><span>])[:</span><span style="color:#fdb082;">5</span><span>]
+</span><span>
+</span><span style="color:#ff5e5e;">for </span><span>buf, score </span><span style="color:#ff5e5e;">in </span><span>top_sorted:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">all</span><span>(b </span><span style="color:#ff5e5e;">&lt;= </span><span style="color:#fdb082;">127 </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span>buf):
+</span><span>        </span><span style="color:#6699cc;">print</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&quot;</span><span>{score}</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">\t</span><span>{buf.</span><span style="color:#e9fdac;">decode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ascii</span><span style="color:#ffffff;">&#39;</span><span>)}</span><span style="color:#ffffff;">&quot;</span><span>)
+</span><span>
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>[python]$ ./1-4.py
+</span><span>2.7992512249798285:     Now that the party is jumping
+</span><span>2.86967725294173:       R4^Ho+[7tRO_dV)84fi##[R3LihkwG
+</span><span>3.8332822273034153:     Ok*DOs8BiKeL8_guI_ro/y#Y|&lt;3A[F
+</span><span>4.11854706822626:       _ HvHm?lw@fr%1$n KeAbC9:vO@h9W
+</span><span>4.251675682452469:      Ihp&#39;sofs&#39;sob&#39;wfus~&#39;nt&#39;mrjwni`
+</span></code></pre>
+<hr />
+<h1 id="implement-repeating-key-xor"><a class="zola-anchor" href="#implement-repeating-key-xor" aria-label="Anchor link for: implement-repeating-key-xor">🔗</a>Implement repeating-key XOR</h1>
+<p>Here is the opening stanza of an important work of the English language:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>Burning &#39;em, if you ain&#39;t quick and nimble
+</span><span>I go crazy when I hear a cymbal
+</span></code></pre>
+<p>Encrypt it, under the key &quot;ICE&quot;, using repeating-key XOR.</p>
+<p>In repeating-key XOR, you'll sequentially apply each byte of the key; the first byte of plaintext will be XOR'd against I, the next C, the next E, then I again for the 4th byte, and so on.</p>
+<p>It should come out to:</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272
+</span><span>a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f
+</span></code></pre>
+<p>Encrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mail. Encrypt your password file. Your .sig file. Get a feel for it. I promise, we aren't wasting your time with this.</p>
+<h2 id="solution-4"><a class="zola-anchor" href="#solution-4" aria-label="Anchor link for: solution-4">🔗</a>Solution</h2>
+<p>Here's a little function that does this operation. A classic use-case for the modulo operator.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">repeating_xor</span><span>(</span><span style="font-style:italic;color:#fc9354;">buf</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>, </span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">bytes</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#fbe3bf;">bytes</span><span>([b </span><span style="color:#ff5e5e;">^ </span><span>key[i </span><span style="color:#ff5e5e;">% </span><span style="color:#6699cc;">len</span><span>(key)] </span><span style="color:#ff5e5e;">for </span><span>i, b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(buf)])
+</span></code></pre>
+<p>We can write <code>bytes</code> literals in python by preceding a quoted string with lowercase b.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>hex_input: </span><span style="color:#fbe3bf;">str
+</span><span>correct_output: </span><span style="color:#fbe3bf;">str
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/5.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    hex_input, correct_output </span><span style="color:#ff5e5e;">= </span><span>f.</span><span style="color:#e9fdac;">read</span><span>().</span><span style="color:#e9fdac;">split</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fdb082;">\n\n</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    correct_output </span><span style="color:#ff5e5e;">= </span><span>correct_output.</span><span style="color:#e9fdac;">replace</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fdb082;">\n</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#ffffff;">&#39;&#39;</span><span>)
+</span><span>
+</span><span>result </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">repeating_xor</span><span>(hex_input.</span><span style="color:#e9fdac;">encode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ascii</span><span style="color:#ffffff;">&#39;</span><span>), </span><span style="font-style:italic;color:#fbdfb5;">b</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ICE</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">correct</span><span style="color:#ffffff;">&#39; </span><span style="color:#ff5e5e;">if </span><span>result.</span><span style="color:#e9fdac;">hex</span><span>() </span><span style="color:#ff5e5e;">== </span><span>correct_output </span><span style="color:#ff5e5e;">else </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">incorrect</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<hr />
+<h1 id="break-repeating-key-xor"><a class="zola-anchor" href="#break-repeating-key-xor" aria-label="Anchor link for: break-repeating-key-xor">🔗</a>Break repeating-key XOR</h1>
+<p><strong>It is officially on, now.</strong></p>
+<blockquote>
+<p>This challenge isn't conceptually hard, but it involves actual error-prone coding. The other challenges in this set are there to bring you up to speed. This one is there to qualify you. If you can do this one, you're probably just fine up to Set 6.</p>
+</blockquote>
+<p>There's a <a href="https://cryptopals.com/static/challenge-data/6.txt">file here</a>. It's been base64'd after being encrypted with repeating-key XOR.</p>
+<p>Decrypt it.</p>
+<p>Here's how:</p>
+<ol>
+<li>
+<p>Let KEYSIZE be the guessed length of the key; try values from 2 to (say) 40.</p>
+</li>
+<li>
+<p>Write a function to compute the edit distance/Hamming distance between two strings. The Hamming distance is just the number of differing bits. The distance between:
+<code>this is a test</code> and <code>wokka wokka!!!</code> is 37. Make sure your code agrees before you proceed.</p>
+</li>
+<li>
+<p>For each KEYSIZE, take the first KEYSIZE worth of bytes, and the second KEYSIZE worth of bytes, and find the edit distance between them. Normalize this result by dividing by KEYSIZE.</p>
+</li>
+<li>
+<p>The KEYSIZE with the smallest normalized edit distance is probably the key. You could proceed perhaps with the smallest 2-3 KEYSIZE values. Or take 4 KEYSIZE blocks instead of 2 and average the distances.</p>
+</li>
+<li>
+<p>Now that you probably know the KEYSIZE: break the ciphertext into blocks of KEYSIZE length.</p>
+</li>
+<li>
+<p>Now transpose the blocks: make a block that is the first byte of every block, and a block that is the second byte of every block, and so on.</p>
+</li>
+<li>
+<p>Solve each block as if it was single-character XOR. You already have code to do this.</p>
+</li>
+<li>
+<p>For each block, the single-byte XOR key that produces the best looking histogram is the repeating-key XOR key byte for that block. Put them together and you have the key.</p>
+</li>
+</ol>
+<p>This code is going to turn out to be surprisingly useful later on. Breaking repeating-key XOR (&quot;Vigenere&quot;) statistically is obviously an academic exercise, a &quot;Crypto 101&quot; thing. But more people &quot;know how&quot; to break it than can actually break it, and a similar technique breaks something much more important.</p>
+<p><strong>No, that's not a mistake.</strong></p>
+<blockquote>
+<p>We get more tech support questions for this challenge than any of the other ones. We promise, there aren't any blatant errors in this text. In particular: the &quot;wokka wokka!!!&quot; edit distance really is 37.</p>
+</blockquote>
+<h2 id="solution-5"><a class="zola-anchor" href="#solution-5" aria-label="Anchor link for: solution-5">🔗</a>Solution</h2>
+<p>Let's start with getting the Hamming distance function working.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">import </span><span>sys
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">hamming_dist</span><span>(</span><span style="font-style:italic;color:#fc9354;">b0</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>, </span><span style="font-style:italic;color:#fc9354;">b1</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">len</span><span>(b0) </span><span style="color:#ff5e5e;">!= </span><span style="color:#6699cc;">len</span><span>(b1):
+</span><span>        sys.</span><span style="color:#e9fdac;">exit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">hamming_dist called on buffers of unequal length</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#6699cc;">sum</span><span>([(x </span><span style="color:#ff5e5e;">^ </span><span>y).</span><span style="color:#e9fdac;">bit_count</span><span>() </span><span style="color:#ff5e5e;">for </span><span>x, y </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">zip</span><span>(b0, b1)])
+</span></code></pre>
+<p>We can count the 1s to get the number of differing bits because the xor of two bytes is 1 in each position where they differ and 0 otherwise. Adding the number of differences
+for each pair of bytes gives us the total Hamming distance.</p>
+<p>Now let's store the parsed input bytes to a variable and start trying the method they described.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>ciphertxt: </span><span style="color:#fbe3bf;">bytes
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/6.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    ciphertxt </span><span style="color:#ff5e5e;">= </span><span>base64.</span><span style="color:#e9fdac;">b64decode</span><span>(f.</span><span style="color:#e9fdac;">read</span><span>())
+</span></code></pre>
+<p>To score one keysize we take the first keysize-sized piece of ciphertext and compute the distance with the next piece. Just one comparison
+didn't turn out to be enough, so let's just compare the first piece to every other one.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>block0 </span><span style="color:#ff5e5e;">= </span><span>ciphertxt[:keysize]
+</span><span>
+</span><span>blocks </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>i </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">1
+</span><span style="color:#ff5e5e;">while </span><span>(i </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>)</span><span style="color:#ff5e5e;">*</span><span>keysize </span><span style="color:#ff5e5e;">&lt; </span><span style="color:#6699cc;">len</span><span>(ciphertxt):
+</span><span>    blocks.</span><span style="color:#e9fdac;">append</span><span>(ciphertxt[i</span><span style="color:#ff5e5e;">*</span><span>keysize:(i </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>)</span><span style="color:#ff5e5e;">*</span><span>keysize])
+</span><span>    i </span><span style="color:#ff5e5e;">+= </span><span style="color:#fdb082;">1
+</span></code></pre>
+<p>The while loop continues adding each block to <code>blocks</code> until there aren't enough bytes for a whole block left.</p>
+<p>Now we can take the distances, average them, and scale the average down by the keysize as they suggest.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>total_dist </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">sum</span><span>([</span><span style="color:#e9fdac;">hamming_dist</span><span>(block0, block) </span><span style="color:#ff5e5e;">for </span><span>block </span><span style="color:#ff5e5e;">in </span><span>blocks])
+</span><span>avg_dist </span><span style="color:#ff5e5e;">= </span><span>total_dist </span><span style="color:#ff5e5e;">/ </span><span style="color:#6699cc;">len</span><span>(blocks)
+</span><span>scaled_dist </span><span style="color:#ff5e5e;">= </span><span>avg_dist </span><span style="color:#ff5e5e;">/ </span><span>keysize
+</span></code></pre>
+<p>Now that we can score one keysize, let's score each one from 2-40 and print the min.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>keysize_scores </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>keysize </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">2</span><span>, </span><span style="color:#fdb082;">40</span><span>):
+</span><span>    block0 </span><span style="color:#ff5e5e;">= </span><span>ciphertxt[:keysize]
+</span><span>
+</span><span>    blocks </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>    i </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">1
+</span><span>    </span><span style="color:#ff5e5e;">while </span><span>(i </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>)</span><span style="color:#ff5e5e;">*</span><span>keysize </span><span style="color:#ff5e5e;">&lt; </span><span style="color:#6699cc;">len</span><span>(ciphertxt):
+</span><span>        blocks.</span><span style="color:#e9fdac;">append</span><span>(ciphertxt[i</span><span style="color:#ff5e5e;">*</span><span>keysize:(i </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>)</span><span style="color:#ff5e5e;">*</span><span>keysize])
+</span><span>        i </span><span style="color:#ff5e5e;">+= </span><span style="color:#fdb082;">1
+</span><span>
+</span><span>    total_dist </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">sum</span><span>([</span><span style="color:#e9fdac;">hamming_dist</span><span>(block0, block) </span><span style="color:#ff5e5e;">for </span><span>block </span><span style="color:#ff5e5e;">in </span><span>blocks])
+</span><span>    avg_dist </span><span style="color:#ff5e5e;">= </span><span>total_dist </span><span style="color:#ff5e5e;">/ </span><span style="color:#6699cc;">len</span><span>(blocks)
+</span><span>    scaled_dist </span><span style="color:#ff5e5e;">= </span><span>avg_dist </span><span style="color:#ff5e5e;">/ </span><span>keysize
+</span><span>
+</span><span>    keysize_scores.</span><span style="color:#e9fdac;">append</span><span>((scaled_dist, keysize))
+</span><span>
+</span><span>min_dist_keysize </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">sorted</span><span>(keysize_scores)[</span><span style="color:#fdb082;">0</span><span>][</span><span style="color:#fdb082;">1</span><span>]
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span>{min_dist_keysize</span><span style="color:#ff5e5e;">=</span><span>}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<p>The last steps entail arranging the ciphertext into vertical slices, where each slice corresponds to a byte of the key.
+Then the key can be recovered byte-by-byte using our method of solving single-byte xor. Note that it doesn't matter that
+the plaintext of each slice isn't English. They're effectively random samples from the english plaintext so the frequency analysis works the same.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>slices </span><span style="color:#ff5e5e;">= </span><span>[[] </span><span style="color:#ff5e5e;">for </span><span style="color:#e9fdac;">_ </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(min_dist_keysize)]
+</span><span style="color:#ff5e5e;">for </span><span>i, byte </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(ciphertxt):
+</span><span>    slices[i </span><span style="color:#ff5e5e;">% </span><span>min_dist_keysize].</span><span style="color:#e9fdac;">append</span><span>(byte)
+</span><span>
+</span><span>key_bytes </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span style="color:#fbe3bf;">slice </span><span style="color:#ff5e5e;">in </span><span>slices:
+</span><span>    scores </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">256</span><span>):
+</span><span>        xor </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>([b </span><span style="color:#ff5e5e;">^ </span><span>c </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span style="color:#fbe3bf;">slice</span><span>])
+</span><span>        scores.</span><span style="color:#e9fdac;">append</span><span>((</span><span style="color:#e9fdac;">score</span><span>(xor), b))
+</span><span>
+</span><span>    scores.</span><span style="color:#e9fdac;">sort</span><span>()
+</span><span>    key_bytes.</span><span style="color:#e9fdac;">append</span><span>(scores[</span><span style="color:#fdb082;">0</span><span>][</span><span style="color:#fdb082;">1</span><span>])
+</span><span>
+</span><span>key </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>(key_bytes)
+</span><span>
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span>{key</span><span style="color:#ff5e5e;">=</span><span>}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span style="color:#6699cc;">print</span><span>(</span><span style="color:#e9fdac;">repeating_xor</span><span>(ciphertxt, key).</span><span style="color:#e9fdac;">decode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ascii</span><span style="color:#ffffff;">&#39;</span><span>))
+</span></code></pre>
+<p>Run the code if you want to see the key and full plaintext.</p>
+<p>One thing about this method that wasn't immediately obvious to me was why taking the Hamming distance works to find the keysize. After a little thinking I have an answer:</p>
+<ul>
+<li>Say we have a key, <code>key</code>, and two key-sized blocks of plaintext, <code>p0</code> and <code>p1</code></li>
+<li>And say the two corresponding blocks of ciphertext are <code>c0 = p0 ^ key</code> and <code>c1 = p1 ^ key</code></li>
+<li>Then <code>c0 ^ c1 = (p0 ^ key) ^ (p1 ^ key) = (p0 ^ p1) ^ (key ^ key) = p0 ^ p1</code></li>
+</ul>
+<p>The last step works because xoring anything with itself is all 0s, and xoring things by all 0s does nothing. But why does <code>p0 ^ p1</code> tend to be smaller?</p>
+<p>Because two bytes of plaintext tend to be from the same subset of all bytes, but without the cancelation they're effectively random (can be any bytes.)
+The closer two bytes are (like on the ascii table) the more bits they'll have in common on average.</p>
+<hr />
+<h1 id="aes-in-ecb-mode"><a class="zola-anchor" href="#aes-in-ecb-mode" aria-label="Anchor link for: aes-in-ecb-mode">🔗</a>AES in ECB mode</h1>
+<p>The Base64-encoded content in <a href="https://cryptopals.com/static/challenge-data/7.txt">this file</a> has been encrypted via AES-128 in ECB mode under the key</p>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>&quot;YELLOW SUBMARINE&quot;
+</span></code></pre>
+<p>(case-sensitive, without the quotes; exactly 16 characters; I like &quot;YELLOW SUBMARINE&quot; because it's exactly 16 bytes long, and now you do too).</p>
+<p>Decrypt it. You know the key, after all.</p>
+<p>Easiest way: use <code>OpenSSL::Cipher</code> and give it AES-128-ECB as the cipher.</p>
+<p><strong>Do this with code.</strong></p>
+<blockquote>
+<p>You can obviously decrypt this using the OpenSSL command-line tool, but we're having you get ECB working in code for a reason. You'll need it a lot later on, and not just for attacking ECB.</p>
+</blockquote>
+<h2 id="the-advanced-encryption-standard"><a class="zola-anchor" href="#the-advanced-encryption-standard" aria-label="Anchor link for: the-advanced-encryption-standard">🔗</a>The Advanced Encryption Standard</h2>
+<p>This is the biggest task in the first set. The code is straightforward in that you can go off of a reference implementation
+or a detailed description of AES, but it's the design of AES that interests me. Most of this section will be a discussion of what I understand
+about the cipher and the code will follow from that.</p>
+<h3 id="context"><a class="zola-anchor" href="#context" aria-label="Anchor link for: context">🔗</a>Context</h3>
+<p>Before getting into the core of the algorithm I'll provide some context for the numbers that typically follow AES (128, 192, or 256) and the
+different <em>modes</em> of AES (ECB, CBC, etc.) The core of the algorithm, which is independent of the mode being used, encrypts or decrypts a fixed-size block of
+data with a key. AES is classified as a <em>block cipher</em> for this reason. The number is the size of the key in bits. The various modes are ways of extending the core algorithm to multiple blocks and they describe, for
+instance, how applying AES to one block may depend on the previous block. The mode the problem asks us to implement is the trivial mode,
+called Encryption Code Book, in which the core algorithm is simply applied to each block of data indepentently. This mode should never be used in
+practice because patterns in the input are preserved in the output as two identical blocks always produce the same output.</p>
+<h3 id="overview"><a class="zola-anchor" href="#overview" aria-label="Anchor link for: overview">🔗</a>Overview</h3>
+<p>AES encrypts or decrypts a single block by repeating the same sequence of steps a number of times, like shuffling a deck of cards. Each application
+of these steps is called a <em>round</em>. In AES-128 there are 10 rounds, in AES-192 ther are 12 rounds, and in AES-256 there are 14 rounds.
+The steps within a round are all reversible, so undoing the whole process for one block is as simple as reversing the order of the steps and inverting each step.</p>
+<p>Each round requires a key, called a <em>round key</em>. The first step of AES on one block is to use the key to derive round keys, one for each round plus one
+initial round key. Deriving the round keys is its own sub-algorithm called the AES key schedule. I'll explain it in detail further on as it reuses components of the main algorithm.</p>
+<p>So from a distance encrypting one block with AES-128 looks like this:</p>
+<ul>
+<li>Use the key schedule to derive 11 round keys</li>
+<li>Add 0th round key to the block with xor</li>
+<li>Each round
+<ul>
+<li>Substitution: use one-to-one function <code>S</code> to replace each byte <code>b</code> with <code>S(b)</code></li>
+<li>Permutatation: shuffle the block around leaving each byte at a new position</li>
+<li>Add the corresponding round key to the block with xor</li>
+</ul>
+</li>
+</ul>
+<img src="SubstitutionPermutationNetwork.png" height=450/>
+<p><strong>Note:</strong></p>
+<blockquote>
+<p>Why does the last round appear different? It's a design choice that allows for a single algorithm instead of encryption and decryption variants.
+My implementation won't take advantage of it for simplicity's sake.</p>
+</blockquote>
+<h3 id="the-pieces"><a class="zola-anchor" href="#the-pieces" aria-label="Anchor link for: the-pieces">🔗</a>The Pieces</h3>
+<p>All that's left is to remove the abstractions and describe the steps in a round exactly. There are three operations used:</p>
+<ul>
+<li>SubBytes</li>
+<li>ShiftRows</li>
+<li>MixColumns</li>
+</ul>
+<p>The size of a block in AES is 128 bits, represented as a 4x4 matrix of bytes. The block is in column-major order, meaning the first four bytes
+become the first column, the second four bytes become the second column, and so on.</p>
+<p>$$
+\begin{bmatrix}
+b_0 &amp; b_4 &amp; b_8 &amp; b_{12}    \\
+b_1 &amp; b_5 &amp; b_9 &amp; b_{13}    \\
+b_2 &amp; b_6 &amp; b_{10} &amp; b_{14} \\
+b_3 &amp; b_7 &amp; b_{11} &amp; b_{15}
+\end{bmatrix}
+$$</p>
+<p>Each of the three steps transforms the entire block, and together after multiple rounds they ensure two properties:</p>
+<ul>
+<li><strong>Confusion</strong>: Bits of the key cannot be correlated with bits of the ciphertext.</li>
+<li><strong>Diffusion</strong>: Bits of the plaintext cannot be correlated with bits of the ciphertext.</li>
+</ul>
+<p>The SubBytes and MixColumns step both involve math. Understanding it isn't necessary to implement the cipher or get a high-level idea of it,
+but the design of the cipher is heavily informed by the math. To keep this description less formal I've moved the math to <a href="https://zanefry.github.io/challenges/matasano/basics/math/">this page</a>.</p>
+<h3 id="subbytes"><a class="zola-anchor" href="#subbytes" aria-label="Anchor link for: subbytes">🔗</a>SubBytes</h3>
+<p>This is the substitution step. It uses a specially chosen function called the S-box which maps one byte to another. The S-box assigns a unique output byte to each input byte.
+Another one-to-one map could be used instead of the S-box and the cipher would remain resistant to many of the attacks AES was designed to thwart. Practically
+speaking the S-box is a 256-byte lookup table, and the underlying math is only required to initialize it.</p>
+<h3 id="shiftrows"><a class="zola-anchor" href="#shiftrows" aria-label="Anchor link for: shiftrows">🔗</a>ShiftRows</h3>
+<p>The ShiftRows operation rearranges the block by rotating the rows of the matrix.
+The first row is unchanged, the second row is rotated left by 1, the third row is rotated left by 2, and the fourth row is rotated left by 3.</p>
+<img src="AES-ShiftRows.svg" height=170 width=auto/>
+<h3 id="mixcolumns"><a class="zola-anchor" href="#mixcolumns" aria-label="Anchor link for: mixcolumns">🔗</a>MixColumns</h3>
+<p>
+The MixColumns step left-multiplies each column by a certain invertible matrix. Or an equivalent description: say the column is \([b_0\;b_1\;b_2\;b_3]\) and the new
+column is \([b_0'\;b_1'\;b_2'\;b_3']\). Each \(b_i'\) is a linear combination of the \(b_i\)'s, like \(b_0' = c_0b_0 + c_1b_1 + c_2b_2 + c_3b_3\).
+The twist is that the addition and multiplication are not the usual ones. Using different notation to distinguish the new operations we write the
+linear combination as \(b_0' = c_0 \bullet b_0 \oplus c_1 \bullet b_1 \oplus c_2 \bullet b_2 \oplus c_3 \bullet b_3\).
+</p>
+<img src="AES-MixColumns.svg" height=200 width=auto/>
+<h3 id="key-schedule"><a class="zola-anchor" href="#key-schedule" aria-label="Anchor link for: key-schedule">🔗</a>Key Schedule</h3>
+<p>The key schedule resembles the main algorithm in that it also uses substitution and permutation to ensure each bit of the round keys is affected by
+many bits of the key in a pseudorandom way. It's simplest to explain with AES-128 because the key and the round keys are the same size. The situation for the other two
+key sizes is only slightly different but it'd distract from the point.</p>
+<p>First the 128-bit key is divided into four 32-bit words. The key becomes round key 0. To derive the 1st 32-bit word of round key 1
+we take the last word of round key 0, rotate the four bytes by one, apply the S-box to each byte, xor by a constant, then xor with the 1st word of round key 0.
+To get the 2nd word of round key 1 we xor the 1st word of round key 1 with the 2nd word of round key 0. To get the 3rd word of round key 1 we xor the 2nd
+word of round key 1 with the 3rd word of round key 0. Once round key 1 is completed, we feed the last word of round key 1 through the rotation and substitution, xor by
+a constant, then xor with the 1st word of round key 1.</p>
+<p>The constants are predetermined and the role they play in the key expansion algorithm is analogous to the role of the round keys in the main algorithm.</p>
+<p>
+The constant for round key \(i\) (starting with 1) is \([rc_i\;00\;00\;00]\) where \(rc_i = 2^{i-1}\).
+</p>
+<p>The power is computed by repeatedly applying the <a href="https://zanefry.github.io/challenges/matasano/basics/math/">special multiplication</a>.</p>
+<img src="key_schedule.svg" height=400 width=auto style="margin-top: 2.5em; margin-bottom: 3em"/>
+<h2 id="implementation"><a class="zola-anchor" href="#implementation" aria-label="Anchor link for: implementation">🔗</a>Implementation</h2>
+<p>I'll go over the pieces in order of highest to lowest-level. Here's the process for encrypting one block:</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">enc_block</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>, </span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>):
+</span><span>    rkeys </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">expand_key</span><span>(key)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">16</span><span>):
+</span><span>        block[i] </span><span style="color:#ff5e5e;">^= </span><span>rkeys[i]
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>rnd </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">1</span><span>, </span><span style="color:#fdb082;">11</span><span>):
+</span><span>        </span><span style="color:#e9fdac;">subBytes</span><span>(block)
+</span><span>        </span><span style="color:#e9fdac;">shiftRows</span><span>(block)
+</span><span>        </span><span style="color:#ff5e5e;">if </span><span>rnd </span><span style="color:#ff5e5e;">!= </span><span style="color:#fdb082;">10</span><span>: </span><span style="color:#e9fdac;">mixColumns</span><span>(block)
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">16</span><span>):
+</span><span>            block[i] </span><span style="color:#ff5e5e;">^= </span><span>rkeys[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>rnd </span><span style="color:#ff5e5e;">+ </span><span>i]
+</span></code></pre>
+<p>I use the <code>bytearray</code> class for the block because it can be modified in-place.
+We generate round keys, xor in the 0th round key, then apply our three transformations and xor in a round key for each round.
+The MixColumns step is omitted from the final round. And for decryption:</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">dec_block</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>, </span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>):
+</span><span>    rkeys </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">expand_key</span><span>(key)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>rnd </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">1</span><span>):
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">16</span><span>):
+</span><span>            block[i] </span><span style="color:#ff5e5e;">^= </span><span>rkeys[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>rnd </span><span style="color:#ff5e5e;">+ </span><span>i]
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">if </span><span>rnd </span><span style="color:#ff5e5e;">!= </span><span style="color:#fdb082;">10</span><span>: </span><span style="color:#e9fdac;">imixColumns</span><span>(block)
+</span><span>        </span><span style="color:#e9fdac;">ishiftRows</span><span>(block)
+</span><span>        </span><span style="color:#e9fdac;">isubBytes</span><span>(block)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">16</span><span>):
+</span><span>        block[i] </span><span style="color:#ff5e5e;">^= </span><span>rkeys[i]
+</span></code></pre>
+<p>The order is reversed and the transformations are replaced by inverse ones. Now let's work backwards from the result and define the functions used.</p>
+<h3 id="subbytes-1"><a class="zola-anchor" href="#subbytes-1" aria-label="Anchor link for: subbytes-1">🔗</a>SubBytes</h3>
+<p>The S-box and its inverse are stored as a pair of lookup-tables. Using them for the SubBytes transformation couldn't be simpler:</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">subBytes</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#e9fdac;">init_tables</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i, b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(block):
+</span><span>        block[i] </span><span style="color:#ff5e5e;">= </span><span>Sbox[b]
+</span></code></pre>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">isubBytes</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#e9fdac;">init_tables</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i, b </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(block):
+</span><span>        block[i] </span><span style="color:#ff5e5e;">= </span><span>inv_Sbox[b]
+</span></code></pre>
+<h3 id="shiftrows-1"><a class="zola-anchor" href="#shiftrows-1" aria-label="Anchor link for: shiftrows-1">🔗</a>ShiftRows</h3>
+<p>Handling 2D arrays in column-major order is slightly disorienting at first. If you're already used to indexing a 2D array like <code>a[row_size * row + col]</code>
+just remember to switch to <code>a[col_size * col + row]</code>.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">shiftRows</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>        row </span><span style="color:#ff5e5e;">= </span><span>[block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>c </span><span style="color:#ff5e5e;">+ </span><span>r] </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>)]
+</span><span>        row </span><span style="color:#ff5e5e;">= </span><span>row[r:] </span><span style="color:#ff5e5e;">+ </span><span>row[:r]
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>            block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>c </span><span style="color:#ff5e5e;">+ </span><span>r] </span><span style="color:#ff5e5e;">= </span><span>row[c]
+</span></code></pre>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">ishiftRows</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>        row </span><span style="color:#ff5e5e;">= </span><span>[block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>c </span><span style="color:#ff5e5e;">+ </span><span>r] </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>)]
+</span><span>        row </span><span style="color:#ff5e5e;">= </span><span>row[</span><span style="color:#ff5e5e;">-</span><span>r:] </span><span style="color:#ff5e5e;">+ </span><span>row[:</span><span style="color:#ff5e5e;">-</span><span>r]
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span>c </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>            block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>c </span><span style="color:#ff5e5e;">+ </span><span>r] </span><span style="color:#ff5e5e;">= </span><span>row[c]
+</span></code></pre>
+<h3 id="mixcolumns-1"><a class="zola-anchor" href="#mixcolumns-1" aria-label="Anchor link for: mixcolumns-1">🔗</a>MixColumns</h3>
+<p>To implement MixColumns we do long-form matrix-vector multiplication. If we weren't using the <a href="https://zanefry.github.io/challenges/matasano/basics/math/">finite field addition and multiplication</a>
+this could be shortened to a <code>numpy</code> matrix multiplication.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">mixColumns</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>        col </span><span style="color:#ff5e5e;">= </span><span>block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)]
+</span><span>        xformed </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">* </span><span>[</span><span style="color:#fdb082;">0</span><span>]
+</span><span>
+</span><span>        xformed[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">2</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">3</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">1</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">1</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">2</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">3</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">1</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">2</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">2</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">3</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">3</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">3</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">2</span><span>)
+</span><span>
+</span><span>        block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)] </span><span style="color:#ff5e5e;">= </span><span>xformed
+</span></code></pre>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">imixColumns</span><span>(</span><span style="font-style:italic;color:#fc9354;">block</span><span>: </span><span style="color:#fbe3bf;">bytearray</span><span>):
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4</span><span>):
+</span><span>        col </span><span style="color:#ff5e5e;">= </span><span>block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)]
+</span><span>        xformed </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">* </span><span>[</span><span style="color:#fdb082;">0</span><span>]
+</span><span>
+</span><span>        xformed[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">14</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">11</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">13</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>],  </span><span style="color:#fdb082;">9</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">1</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>],  </span><span style="color:#fdb082;">9</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">14</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">11</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">13</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">2</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">13</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>],  </span><span style="color:#fdb082;">9</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>], </span><span style="color:#fdb082;">14</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">11</span><span>)
+</span><span>        xformed[</span><span style="color:#fdb082;">3</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">11</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">1</span><span>], </span><span style="color:#fdb082;">13</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">2</span><span>],  </span><span style="color:#fdb082;">9</span><span>) </span><span style="color:#ff5e5e;">^ </span><span style="color:#e9fdac;">gmul</span><span>(col[</span><span style="color:#fdb082;">3</span><span>], </span><span style="color:#fdb082;">14</span><span>)
+</span><span>
+</span><span>        block[</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">4</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)] </span><span style="color:#ff5e5e;">= </span><span>xformed
+</span></code></pre>
+<p>The numbers in the inverse variant are used because over \(GF(2^8)\)</p>
+<p>$$
+{\begin{bmatrix}
+2 &amp; 3 &amp; 1 &amp; 1   \\
+1 &amp; 2 &amp; 3 &amp; 1   \\
+1 &amp; 1 &amp; 2 &amp; 3   \\
+3 &amp; 1 &amp; 1 &amp; 2
+\end{bmatrix}}^{-1} =
+\begin{bmatrix}
+14 &amp; 11 &amp; 13 &amp; 9   \\
+9 &amp; 14 &amp; 11 &amp; 13   \\
+13 &amp; 9 &amp; 14 &amp; 11   \\
+11 &amp; 13 &amp; 9 &amp; 14
+\end{bmatrix}.
+$$</p>
+<h3 id="key-schedule-1"><a class="zola-anchor" href="#key-schedule-1" aria-label="Anchor link for: key-schedule-1">🔗</a>Key Schedule</h3>
+<p>We generate the constants, define some functions for the different operations, then follow the rules for constructing each word of the round keys
+from the previous words.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">expand_key</span><span>(</span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">bytes</span><span>:
+</span><span>    num_rounds </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">10
+</span><span>    rcons </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#fbe3bf;">bytearray</span><span>(</span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">* </span><span>[</span><span style="color:#fdb082;">0</span><span>]) </span><span style="color:#ff5e5e;">for </span><span style="color:#e9fdac;">_ </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(num_rounds)]
+</span><span>
+</span><span>    rcons[</span><span style="color:#fdb082;">0</span><span>][</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">1
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">1</span><span>, num_rounds): </span><span style="color:#6d6d6d;"># generate constants
+</span><span>        rcons[i][</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">gmul</span><span>(rcons[i</span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">1</span><span>][</span><span style="color:#fdb082;">0</span><span>], </span><span style="color:#fdb082;">2</span><span>)
+</span><span>        rcons[i] </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytes</span><span>(rcons[i])
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">S_word</span><span>(</span><span style="font-style:italic;color:#fc9354;">word</span><span>):
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span style="color:#fbe3bf;">bytes</span><span>([Sbox[b] </span><span style="color:#ff5e5e;">for </span><span>b </span><span style="color:#ff5e5e;">in </span><span>word])
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">rot</span><span>(</span><span style="font-style:italic;color:#fc9354;">word</span><span>):
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span>word[</span><span style="color:#fdb082;">1</span><span>:] </span><span style="color:#ff5e5e;">+ </span><span>word[:</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">xor</span><span>(</span><span style="font-style:italic;color:#fc9354;">w0</span><span>, </span><span style="font-style:italic;color:#fc9354;">w1</span><span>):
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span style="color:#fbe3bf;">bytes</span><span>([x </span><span style="color:#ff5e5e;">^ </span><span>y </span><span style="color:#ff5e5e;">for </span><span>x, y </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">zip</span><span>(w0, w1)])
+</span><span>
+</span><span>    key </span><span style="color:#ff5e5e;">= </span><span>[key[:</span><span style="color:#fdb082;">4</span><span>], key[</span><span style="color:#fdb082;">4</span><span>:</span><span style="color:#fdb082;">8</span><span>], key[</span><span style="color:#fdb082;">8</span><span>:</span><span style="color:#fdb082;">12</span><span>], key[</span><span style="color:#fdb082;">12</span><span>:]] </span><span style="color:#6d6d6d;"># split key into 32-bit words
+</span><span>    rkeys </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">* </span><span>(num_rounds </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>)): </span><span style="color:#6d6d6d;"># for each word in rkeys
+</span><span>        </span><span style="color:#ff5e5e;">if </span><span>i </span><span style="color:#ff5e5e;">&lt; </span><span style="color:#fdb082;">4</span><span>:
+</span><span>            rkeys.</span><span style="color:#e9fdac;">append</span><span>(key[i])
+</span><span>        </span><span style="color:#ff5e5e;">elif </span><span>i </span><span style="color:#ff5e5e;">% </span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">== </span><span style="color:#fdb082;">0</span><span>:
+</span><span>            rc </span><span style="color:#ff5e5e;">= </span><span>rcons[i </span><span style="color:#ff5e5e;">// </span><span style="color:#fdb082;">4 </span><span style="color:#ff5e5e;">- </span><span style="color:#fdb082;">1</span><span>]
+</span><span>            rkeys.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="color:#e9fdac;">xor</span><span>(</span><span style="color:#e9fdac;">S_word</span><span>(</span><span style="color:#e9fdac;">rot</span><span>(rkeys[i</span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">1</span><span>])), </span><span style="color:#e9fdac;">xor</span><span>(rkeys[i</span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">4</span><span>],  rc)))
+</span><span>        </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>            rkeys.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="color:#e9fdac;">xor</span><span>(rkeys[i</span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">1</span><span>], rkeys[i</span><span style="color:#ff5e5e;">-</span><span style="color:#fdb082;">4</span><span>]))
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="font-style:italic;color:#fbdfb5;">b</span><span style="color:#ffffff;">&#39;&#39;</span><span>.</span><span style="color:#e9fdac;">join</span><span>(rkeys)
+</span></code></pre>
+<h3 id="finite-field-operations"><a class="zola-anchor" href="#finite-field-operations" aria-label="Anchor link for: finite-field-operations">🔗</a>Finite Field Operations</h3>
+<p>
+The implementation of multiplication and division uses a trick that was common before the advent of computers. Since the early 17th century
+people used a pairs of tables to multiply and divide large numbers faster. Here's how to multiply \(a\) and \(b\): look them both up
+in a table of logarithms, which gives you \(\log_x a\) and \(\log_x b\) for whatever base \(x\) is used by the tables, then look up
+\(\log_x a + \log_x b\) in the sister table of exponents. The result is \(x^{\log_x a + \log_x b} = x^{\log_x a}x^{\log_x b} = ab\).
+This method turns multiplication and division into addition and subtraction, which made a big difference when all calculations were done by hand.
+</p>
+<p>A pair of tables lets us replace multiplication and division (loop ~8 times) with 3 lookups and an addition. The performance gain may be inconsequential
+here, but the difference it makes for hardware implementations is similar to the one experienced by people in the 17th century.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">gmul</span><span>(</span><span style="font-style:italic;color:#fc9354;">a</span><span>: </span><span style="color:#fbe3bf;">int</span><span>, </span><span style="font-style:italic;color:#fc9354;">b</span><span>: </span><span style="color:#fbe3bf;">int</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span>a </span><span style="color:#ff5e5e;">or not </span><span>b:
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span style="color:#fdb082;">0
+</span><span>
+</span><span>    </span><span style="color:#e9fdac;">init_tables</span><span>()
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>exp_lut[(log_lut[a] </span><span style="color:#ff5e5e;">+ </span><span>log_lut[b]) </span><span style="color:#ff5e5e;">% </span><span style="color:#fdb082;">0xff</span><span>]
+</span></code></pre>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">gdiv</span><span>(</span><span style="font-style:italic;color:#fc9354;">a</span><span>: </span><span style="color:#fbe3bf;">int</span><span>, </span><span style="font-style:italic;color:#fc9354;">b</span><span>: </span><span style="color:#fbe3bf;">int</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span>b:
+</span><span>        </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">ValueError</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">division by 0</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>    </span><span style="color:#e9fdac;">init_tables</span><span>()
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>exp_lut[(log_lut[a] </span><span style="color:#ff5e5e;">- </span><span>log_lut[b]) </span><span style="color:#ff5e5e;">% </span><span style="color:#fdb082;">0xff</span><span>]
+</span></code></pre>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">ginv</span><span>(</span><span style="font-style:italic;color:#fc9354;">a</span><span>: </span><span style="color:#fbe3bf;">int</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">gdiv</span><span>(</span><span style="color:#fdb082;">1</span><span>, a)
+</span></code></pre>
+<p>Modding by <code>0xff</code> works because the base of the tables, in our case 3, is a generator of the finite field.
+That means starting with any element of the field and repeatedly multiplying by 3 will enumerate the whole field, returning to your starting
+byte after 256 steps.</p>
+<p>
+Say \(\log_3 a = 255\) and \(\log_3 b = 2\). Then \(ab = 3^{255 + 2} = 3^{256 + 1} = 3^{256}3^1 = 1 \bullet 3 = 3\)
+</p>
+<h3 id="initialize-tables"><a class="zola-anchor" href="#initialize-tables" aria-label="Anchor link for: initialize-tables">🔗</a>Initialize Tables</h3>
+<p>Some setup is required before using the field operations or the S-box. Each function which uses them calls <code>init_tables()</code> first, which does the setup
+if it hasn't already been done.</p>
+<p>
+By repeatedly multiplying by 3 we can store all the values of \(\log_3 n\) and \(3^n\) for each \(n\) in \([0, \ldots, 255]\).
+</p>
+<p>I explain how the bitwise expression comes from the definition of multiplication in GF(2<sup>8</sup>) <a href="https://zanefry.github.io/challenges/matasano/basics/math/">here</a>.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>log_lut </span><span style="color:#ff5e5e;">=   </span><span>[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">* </span><span style="color:#fdb082;">256
+</span><span>exp_lut </span><span style="color:#ff5e5e;">=   </span><span>[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">* </span><span style="color:#fdb082;">256
+</span><span>Sbox </span><span style="color:#ff5e5e;">=      </span><span>[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">* </span><span style="color:#fdb082;">256
+</span><span>inv_Sbox </span><span style="color:#ff5e5e;">=  </span><span>[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">* </span><span style="color:#fdb082;">256
+</span><span>
+</span><span>tables_initialized </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">False
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">init_tables</span><span>(): </span><span style="color:#6d6d6d;"># using 3 as a generator for GF(2^8)
+</span><span>    </span><span style="color:#ff5e5e;">global </span><span>tables_initialized
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span>tables_initialized: </span><span style="color:#ff5e5e;">return
+</span><span>    </span><span style="color:#ff5e5e;">else</span><span>: tables_initialized </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">True
+</span><span>
+</span><span>    a </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">1
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">256</span><span>):
+</span><span>        exp_lut[i] </span><span style="color:#ff5e5e;">= </span><span>a </span><span style="color:#6d6d6d;"># 3^i = a
+</span><span>        log_lut[a] </span><span style="color:#ff5e5e;">= </span><span>i </span><span style="color:#6d6d6d;"># log3(a) = i
+</span><span>
+</span><span>        a </span><span style="color:#ff5e5e;">^= </span><span>(a </span><span style="color:#ff5e5e;">&lt;&lt; </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span>(</span><span style="color:#fdb082;">0x1b </span><span style="color:#ff5e5e;">if </span><span>(a </span><span style="color:#ff5e5e;">&amp; </span><span style="color:#fdb082;">0x80</span><span>) </span><span style="color:#ff5e5e;">else </span><span style="color:#fdb082;">0</span><span>) </span><span style="color:#6d6d6d;"># a *= 3
+</span><span>        a </span><span style="color:#ff5e5e;">&amp;= </span><span style="color:#fdb082;">0xff
+</span><span>
+</span><span>    </span><span style="color:#e9fdac;">init_Sbox</span><span>()
+</span></code></pre>
+<p>To compute the S-box value for a given byte we just xor together 5 copies of its inverse rotated by different amounts, then xor in an offset term.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">init_Sbox</span><span>():
+</span><span>    </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">rotl_byte</span><span>(</span><span style="font-style:italic;color:#fc9354;">a</span><span>: </span><span style="color:#fbe3bf;">int</span><span>, </span><span style="font-style:italic;color:#fc9354;">n</span><span>: </span><span style="color:#fbe3bf;">int</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span style="color:#e9fdac;">_ </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(n):
+</span><span>            hi_bit </span><span style="color:#ff5e5e;">= </span><span>a </span><span style="color:#ff5e5e;">&amp; </span><span style="color:#fdb082;">0x80
+</span><span>            a </span><span style="color:#ff5e5e;">= </span><span>(a </span><span style="color:#ff5e5e;">&lt;&lt; </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">&amp; </span><span style="color:#fdb082;">0xff
+</span><span>            a </span><span style="color:#ff5e5e;">|= </span><span>hi_bit </span><span style="color:#ff5e5e;">&gt;&gt; </span><span style="color:#fdb082;">7
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">return </span><span>a
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>n </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">1</span><span>, </span><span style="color:#fdb082;">256</span><span>):
+</span><span>        inv </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">ginv</span><span>(n)
+</span><span>        Sbox[n] </span><span style="color:#ff5e5e;">=   </span><span>inv </span><span style="color:#ff5e5e;">^ </span><span>\
+</span><span>                    </span><span style="color:#e9fdac;">rotl_byte</span><span>(inv, </span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">^ </span><span>\
+</span><span>                    </span><span style="color:#e9fdac;">rotl_byte</span><span>(inv, </span><span style="color:#fdb082;">2</span><span>) </span><span style="color:#ff5e5e;">^ </span><span>\
+</span><span>                    </span><span style="color:#e9fdac;">rotl_byte</span><span>(inv, </span><span style="color:#fdb082;">3</span><span>) </span><span style="color:#ff5e5e;">^ </span><span>\
+</span><span>                    </span><span style="color:#e9fdac;">rotl_byte</span><span>(inv, </span><span style="color:#fdb082;">4</span><span>) </span><span style="color:#ff5e5e;">^ </span><span>\
+</span><span>                    </span><span style="color:#fdb082;">0x63
+</span><span>
+</span><span>        inv_Sbox[Sbox[n]] </span><span style="color:#ff5e5e;">= </span><span>n
+</span><span>
+</span><span>    Sbox[</span><span style="color:#fdb082;">0</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">0x63
+</span><span>    inv_Sbox[</span><span style="color:#fdb082;">0x63</span><span>] </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">0
+</span></code></pre>
+<h3 id="encryption-code-book-mode"><a class="zola-anchor" href="#encryption-code-book-mode" aria-label="Anchor link for: encryption-code-book-mode">🔗</a>Encryption Code Book Mode</h3>
+<p>All we need to do to implement ECB mode is use <code>ecb_enc</code> or <code>ecb_dec</code> on each block. When encrypting we need the plaintext to be a whole number of blocks,
+so we add padding first if necessary. I'll skip describing the padding here as it's covered in set 2.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">ecb_enc</span><span>(</span><span style="font-style:italic;color:#fc9354;">plaintxt</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>, </span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">bytes</span><span>:
+</span><span>    pt </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytearray</span><span>(</span><span style="color:#e9fdac;">add_padding</span><span>(plaintxt))
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#6699cc;">len</span><span>(pt) </span><span style="color:#ff5e5e;">// </span><span style="color:#fdb082;">16</span><span>):
+</span><span>        block </span><span style="color:#ff5e5e;">= </span><span>pt[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)]
+</span><span>        </span><span style="color:#e9fdac;">enc_block</span><span>(block, key)
+</span><span>        pt[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)] </span><span style="color:#ff5e5e;">= </span><span>block
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#fbe3bf;">bytes</span><span>(pt)
+</span></code></pre>
+<p>An error should be thrown if the decryption function ever recieves ciphertext that's not a whole number of blocks.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">ecb_dec</span><span>(</span><span style="font-style:italic;color:#fc9354;">ciphertxt</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>, </span><span style="font-style:italic;color:#fc9354;">key</span><span>: </span><span style="color:#fbe3bf;">bytes</span><span>) -&gt; </span><span style="color:#fbe3bf;">bytes</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">len</span><span>(ciphertxt) </span><span style="color:#ff5e5e;">% </span><span style="color:#fdb082;">16</span><span>:
+</span><span>        </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">ValueError</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">incorrect padding</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>    ct </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">bytearray</span><span>(ciphertxt)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#6699cc;">len</span><span>(ct) </span><span style="color:#ff5e5e;">// </span><span style="color:#fdb082;">16</span><span>):
+</span><span>        block </span><span style="color:#ff5e5e;">= </span><span>ct[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)]
+</span><span>        </span><span style="color:#e9fdac;">dec_block</span><span>(block, key)
+</span><span>        ct[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)] </span><span style="color:#ff5e5e;">= </span><span>block
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#fbe3bf;">bytes</span><span>(ct)
+</span></code></pre>
+<h3 id="putting-it-to-use"><a class="zola-anchor" href="#putting-it-to-use" aria-label="Anchor link for: putting-it-to-use">🔗</a>Putting it to Use</h3>
+<p>Let's try decrypting the message with &quot;YELLOW SUBMARINE&quot;.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">import </span><span>base64
+</span><span style="color:#ff5e5e;">from </span><span>aes </span><span style="color:#ff5e5e;">import </span><span>ecb_dec
+</span><span>
+</span><span>ciphertxt: </span><span style="color:#fbe3bf;">bytes
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/7.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    ciphertxt </span><span style="color:#ff5e5e;">= </span><span>base64.</span><span style="color:#e9fdac;">b64decode</span><span>(</span><span style="color:#ffffff;">&#39;&#39;</span><span>.</span><span style="color:#e9fdac;">join</span><span>([l.</span><span style="color:#e9fdac;">rstrip</span><span>() </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]))
+</span><span>
+</span><span>plaintxt </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">ecb_dec</span><span>(ciphertxt, </span><span style="font-style:italic;color:#fbdfb5;">b</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">YELLOW SUBMARINE</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span style="color:#6699cc;">print</span><span>(plaintxt.</span><span style="color:#e9fdac;">decode</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">utf-8</span><span style="color:#ffffff;">&#39;</span><span>))
+</span></code></pre>
+<pre style="background-color:#191919;color:#f8f8f2;"><code><span>[python]$ ./1-7.py
+</span><span>I&#39;m back and I&#39;m ringin&#39; the bell
+</span><span>A rockin&#39; on the mike while the fly girls yell
+</span><span>In ecstasy in the back of me
+</span><span>Well that&#39;s my DJ Deshay cuttin&#39; all them Z&#39;s
+</span><span>Hittin&#39; hard and the girlies goin&#39; crazy
+</span><span>Vanilla&#39;s on the mike, man I&#39;m not lazy.
+</span><span>
+</span><span>I&#39;m lettin&#39; my drug kick in
+</span><span>It controls my mouth and I begin
+</span><span>To just let it flow, let my concepts go
+</span><span>My posse&#39;s to the side yellin&#39;, Go Vanilla Go!
+</span><span>
+</span><span>Smooth &#39;cause that&#39;s the way I will be
+</span><span>And if you don&#39;t give a damn, then
+</span><span>Why you starin&#39; at me
+</span><span>So get off &#39;cause I control the stage
+</span><span>There&#39;s no dissin&#39; allowed
+</span><span>I&#39;m in my own phase
+</span><span>The girlies sa y they love me and that is ok
+</span><span>And I can dance better than any kid n&#39; play
+</span><span>
+</span><span>Stage 2 -- Yea the one ya&#39; wanna listen to
+</span><span>It&#39;s off my head so let the beat play through
+</span><span>So I can funk it up and make it sound good
+</span><span>1-2-3 Yo -- Knock on some wood
+</span><span>For good luck, I like my rhymes atrocious
+</span><span>Supercalafragilisticexpialidocious
+</span><span>I&#39;m an effect and that you can bet
+</span><span>I can take a fly girl and make her wet.
+</span><span>
+</span><span>I&#39;m like Samson -- Samson to Delilah
+</span><span>There&#39;s no denyin&#39;, You can try to hang
+</span><span>But you&#39;ll keep tryin&#39; to get my style
+</span><span>Over and over, practice makes perfect
+</span><span>But not if you&#39;re a loafer.
+</span><span>
+</span><span>You&#39;ll get nowhere, no place, no time, no girls
+</span><span>Soon -- Oh my God, homebody, you probably eat
+</span><span>Spaghetti with a spoon! Come on and say it!
+</span><span>
+</span><span>VIP. Vanilla Ice yep, yep, I&#39;m comin&#39; hard like a rhino
+</span><span>Intoxicating so you stagger like a wino
+</span><span>So punks stop trying and girl stop cryin&#39;
+</span><span>Vanilla Ice is sellin&#39; and you people are buyin&#39;
+</span><span>&#39;Cause why the freaks are jockin&#39; like Crazy Glue
+</span><span>Movin&#39; and groovin&#39; trying to sing along
+</span><span>All through the ghetto groovin&#39; this here song
+</span><span>Now you&#39;re amazed by the VIP posse.
+</span><span>
+</span><span>Steppin&#39; so hard like a German Nazi
+</span><span>Startled by the bases hittin&#39; ground
+</span><span>There&#39;s no trippin&#39; on mine, I&#39;m just gettin&#39; down
+</span><span>Sparkamatic, I&#39;m hangin&#39; tight like a fanatic
+</span><span>You trapped me once and I thought that
+</span><span>You might have it
+</span><span>So step down and lend me your ear
+</span><span>&#39;89 in my time! You, &#39;90 is my year.
+</span><span>
+</span><span>You&#39;re weakenin&#39; fast, YO! and I can tell it
+</span><span>Your body&#39;s gettin&#39; hot, so, so I can smell it
+</span><span>So don&#39;t be mad and don&#39;t be sad
+</span><span>&#39;Cause the lyrics belong to ICE, You can call me Dad
+</span><span>You&#39;re pitchin&#39; a fit, so step back and endure
+</span><span>Let the witch doctor, Ice, do the dance to cure
+</span><span>So come up close and don&#39;t be square
+</span><span>You wanna battle me -- Anytime, anywhere
+</span><span>
+</span><span>You thought that I was weak, Boy, you&#39;re dead wrong
+</span><span>So come on, everybody and sing this song
+</span><span>
+</span><span>Say -- Play that funky music Say, go white boy, go white boy go
+</span><span>play that funky music Go white boy, go white boy, go
+</span><span>Lay down and boogie and play that funky music till you die.
+</span><span>
+</span><span>Play that funky music Come on, Come on, let me hear
+</span><span>Play that funky music white boy you say it, say it
+</span><span>Play that funky music A little louder now
+</span><span>Play that funky music, white boy Come on, Come on, Come on
+</span><span>Play that funky music
+</span></code></pre>
+<hr />
+<h1 id="detect-aes-in-ecb-mode"><a class="zola-anchor" href="#detect-aes-in-ecb-mode" aria-label="Anchor link for: detect-aes-in-ecb-mode">🔗</a>Detect AES in ECB mode</h1>
+<p>In <a href="https://cryptopals.com/static/challenge-data/8.txt">this file</a> are a bunch of hex-encoded ciphertexts.</p>
+<p>One of them has been encrypted with ECB.</p>
+<p>Detect it.</p>
+<p>Remember that the problem with ECB is that it is stateless and deterministic; the same 16 byte plaintext block will always produce the same 16 byte ciphertext.</p>
+<h2 id="solution-6"><a class="zola-anchor" href="#solution-6" aria-label="Anchor link for: solution-6">🔗</a>Solution</h2>
+<p>The problem tells us exactly what to do: look for repeated 16-byte blocks. Here's some code to print the number of the first line with repeat blocks.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>ciphertxts: </span><span style="color:#fbe3bf;">list</span><span>[</span><span style="color:#fbe3bf;">bytes</span><span>]
+</span><span style="color:#ff5e5e;">with </span><span style="color:#6699cc;">open</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">../inputs/8.txt</span><span style="color:#ffffff;">&#39;</span><span>) </span><span style="color:#ff5e5e;">as </span><span>f:
+</span><span>    ciphertxts </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#fbe3bf;">bytes</span><span>.</span><span style="color:#e9fdac;">fromhex</span><span>(l.</span><span style="color:#e9fdac;">rstrip</span><span>()) </span><span style="color:#ff5e5e;">for </span><span>l </span><span style="color:#ff5e5e;">in </span><span>f.</span><span style="color:#e9fdac;">readlines</span><span>()]
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">main</span><span>():
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>n, ct </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(ciphertxts):
+</span><span>        num_blocks </span><span style="color:#ff5e5e;">= </span><span style="color:#6699cc;">len</span><span>(ct) </span><span style="color:#ff5e5e;">// </span><span style="color:#fdb082;">16
+</span><span>        blocks </span><span style="color:#ff5e5e;">= </span><span>[ct[</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>i:</span><span style="color:#fdb082;">16</span><span style="color:#ff5e5e;">*</span><span>(i</span><span style="color:#ff5e5e;">+</span><span style="color:#fdb082;">1</span><span>)] </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(num_blocks)]
+</span><span>
+</span><span>        </span><span style="color:#ff5e5e;">for </span><span>i </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(num_blocks </span><span style="color:#ff5e5e;">- </span><span style="color:#fdb082;">1</span><span>):
+</span><span>            </span><span style="color:#ff5e5e;">for </span><span>j </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(i </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>, num_blocks):
+</span><span>                </span><span style="color:#ff5e5e;">if </span><span>blocks[i] </span><span style="color:#ff5e5e;">== </span><span>blocks[j]:
+</span><span>                    </span><span style="color:#6699cc;">print</span><span>(n)
+</span><span>                    </span><span style="color:#ff5e5e;">return
+</span><span>
+</span><span style="color:#ff5e5e;">if </span><span>__name__ </span><span style="color:#ff5e5e;">== </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">__main__</span><span style="color:#ffffff;">&#39;</span><span>:
+</span><span>    </span><span style="color:#e9fdac;">main</span><span>()
+</span></code></pre>
+
+  </div>
+
+	
+
+  <div class="pagination">
+  	
+		<a href="#" class="top">Top</a>
+		
+  </div>
+
+  </main>
+
+  
+  <footer>
+    <span>&copy; <time datetime="2022-12-09T00:47:11.892999709+00:00">2022</time> Zane Fry. Made with <a href="https://www.getzola.org">Zola</a> and <a href="https://github.com/aaranxu/tale-zola">Tale-Zola</a>.</span>
+  </footer>
+  
+</body>
+</html>

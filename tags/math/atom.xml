@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Zane&#x27;s Notes - Math</title>
+	<subtitle>Notes on infosec</subtitle>
+	<link href="https://zanefry.github.io/tags/math/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://zanefry.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-11-14T19:54:00-06:00</updated>
+	<id>https://zanefry.github.io/tags/math/atom.xml</id>
+	<entry xml:lang="en">
+		<title>AES Math</title>
+		<published>2022-11-14T19:54:00-06:00</published>
+		<updated>2022-11-14T19:54:00-06:00</updated>
+		<link rel="alternate" href="https://zanefry.github.io/challenges/matasano/basics/math/" type="text/html"/>
+		<id>https://zanefry.github.io/challenges/matasano/basics/math/</id>
+		<content type="html">&lt;h2 id=&quot;operations-in-aes-s-finite-field&quot;&gt;Operations in AES&#x27;s finite field&lt;&#x2F;h2&gt;
+</content>
+	</entry>
+</feed>
