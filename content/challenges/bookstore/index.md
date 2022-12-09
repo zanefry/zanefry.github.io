@@ -3,7 +3,7 @@ title = "TryHackMe Bookstore"
 date = 2022-11-07T18:49:59-06:00
 
 [taxonomies]
-tags = ["CTF", "TryHackMe"]
+tags = ["CTF"]
 
 [extra]
 author = "Zane Fry"
